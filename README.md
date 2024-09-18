@@ -6,9 +6,11 @@ This browser based web application to ...
 
 ## 2. Names of Contributors
 List team members and/or short bio's here... 
-* ...
+
 * My name is Diana and I am excited to see the result of our project.
-* 
+* My name is Baltaj and I'm excited to build my first ever web app.
+* I'm Jayden! I'm excited to make an app even though I currently have no idea how to!
+	
 ## 3. Technologies and Resources Used
 List technologies (with version numbers), API's, icons, fonts, images, media or data sources, and other resources that were used.
 * HTML, CSS, JavaScript
