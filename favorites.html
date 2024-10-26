@@ -4,26 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites</title>
-    <link rel="stylesheet" href="favorite.css"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-zR2Th81p9pUA9VB/iea7N04BKGsXUSxZ9oInkeB66xFOHC+ITJXIyQSFSngxEp1OGXopuWR2AOzSeyhQIAQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles/favorite.css"> 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Additional styling to increase the size of the bottom navbar */
+        .bottom-navbar {
+            padding: 15px 0; /* Increase padding */
+        }
+        .bottom-navbar .navbar-brand {
+            font-size: 1.8rem; /* Increase icon size */
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Navigation bar with back button, title, and home button 
-     All images with links to lead to other pages later on
-    -->
-    <header>
-        <a href="#"><img src="images/backbutton.jpg" alt="Back" class="icon"></a>
-        <h2>Favorites</h2>
-        <a href=><img src="images/homebutton.png" alt="Home" class="icon"></a>
-    </header>
-    
-<!-- All of the containers for the bus stops
- All contain bus stop number
--->
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
+        <div class="container-fluid">
+            <a href="#" class="navbar-brand">
+                <img src="images/backicon.png" alt="Back" class="navbar-brand-icon">
+            </a>
+            <span class="navbar-text mx-auto" style="color: black; font-size: xx-large;">Favorites</span>
+            <a href="#" class="navbar-brand">
+                <img src="images/homeicon.png" alt="Homeicon.png" class="navbar-brand-icon">
+            </a>
+        </div>
+    </nav>
 
-    <main>
-        <div class="favorite-container">
+    <!-- Bus Stop Containers -->
+    <main class="mt-3">
+        <div class="favorite-container container">
             <div class="favorite" data-stop="1">
                 <div class="title">Favorite 1</div>
                 <div class="bus-number">Bus number 1</div>
@@ -48,7 +60,7 @@
                 <div class="title">Favorite 6</div>
                 <div class="bus-number">Bus number 6</div>
             </div>
-            <div class="favorite"data-stop="7">
+            <div class="favorite" data-stop="7">
                 <div class="title">Favorite 7</div>
                 <div class="bus-number">Bus number 7</div>
             </div>
@@ -56,7 +68,76 @@
                 <div class="title">Favorite 8</div>
                 <div class="bus-number">Bus number 8</div>
             </div>
+            <div class="favorite" data-stop="9">
+                <div class="title">Favorite 9</div>
+                <div class="bus-number">Bus number 9</div>
+            </div>
+            <div class="favorite" data-stop="10">
+                <div class="title">Favorite 10</div>
+                <div class="bus-number">Bus number 10</div>
+            </div>
+            <div class="favorite" data-stop="11">
+                <div class="title">Favorite 11</div>
+                <div class="bus-number">Bus number 11</div>
+            </div>
+            <div class="favorite" data-stop="12">
+                <div class="title">Favorite 12</div>
+                <div class="bus-number">Bus number 12</div>
+                
+            </div>
+            <div class="favorite" data-stop="13">
+                <div class="title">Favorite 13</div>
+                <div class="bus-number">Bus number 13</div>
+            </div>
+            <div class="favorite" data-stop="14">
+                <div class="title">Favorite 14</div>
+                <div class="bus-number">Bus number 14</div>
+            </div>
+            <div class="favorite" data-stop="15">
+                <div class="title">Favorite 15</div>
+                <div class="bus-number">Bus number 15</div>
+            </div>
+            <div class="favorite" data-stop="16">
+                <div class="title">Favorite 16</div>
+                <div class="bus-number">Bus number 16</div>
+            </div>
+            <div class="favorite" data-stop="17">
+                <div class="title">Favorite 17</div>
+                <div class="bus-number">Bus number 17</div>
+            </div>
+            <div class="favorite" data-stop="18">
+                <div class="title">Favorite 18</div>
+                <div class="bus-number">Bus number 18</div>
+            </div>
+            <div class="favorite" data-stop="19">
+                <div class="title">Favorite 19</div>
+                <div class="bus-number">Bus number 19</div>
+            </div>
+            <div class="favorite" data-stop="20">
+                <div class="title">Favorite 20</div>
+                <div class="bus-number">Bus number 20</div>
+            </div>
         </div>
     </main>
+
+    <!-- Bottom Navbar -->
+    <nav class="navbar navbar-expand navbar-dark fixed-bottom bottom-navbar large-navbar" style="background-color: rgb(13, 173, 13);">
+        <div class="container-fluid justify-content-between">
+            <a href="#" class="navbar-brand">
+                <img src="images/accounticon.png" alt="Accounticon.png" class="navbar-brand-icon">
+            </a>
+            <a href="#" class="navbar-brand mx-auto">
+                <img src="images/homeicon.png" alt="Homeicon.png" class="navbar-brand-icon">
+            </a>
+            <a href="#" class="navbar-brand">
+                <img src="images/saveicon.png" alt="Saveicon.png" class="navbar-brand-icon">
+            </a>
+        </div>
+    </nav>
+    
+    
+    <!-- Bootstrap JavaScript Bundle (with Popper.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/saved.js"></script>
 </body>
 </html>
