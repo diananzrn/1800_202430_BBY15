@@ -128,3 +128,8 @@ main {
     transform: scale(1.02); /* Slightly enlarge on hover */
     cursor: pointer; /* Change cursor to pointer */
 }
+.footer-icon {
+    color: rgb(0, 87, 0);
+    font-size: 1.2rem; /* Adjust this value to change the icon size */
+    margin: 0 5px; /* Optional horizontal spacing */
+}
