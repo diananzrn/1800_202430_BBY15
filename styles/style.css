@@ -1,1 +1,28 @@
 
+body {
+    overflow-x: hidden;
+}
+
+.btn {
+    background-color: rgb(238, 255, 238);
+    border-radius: 2em;
+    color: rgb(0, 87, 0);
+    margin-top: 1%;
+    border-color: rgb(0, 87, 0);
+}
+
+.btn:hover {
+    background-color: rgb(0, 87, 0);
+    color: rgb(238, 255, 238);
+}
+
+.routes {
+    display: flex;
+    gap: 3%;
+}
+
+.route-number {
+    padding: 0px 20px;
+    background-color: #ededed;
+    border-radius: 10px;
+}
