@@ -1,149 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Favorites</title>
-    <link rel="stylesheet" href="styles/favorite.css"> 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/favorite.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
-    
-    <style>
-        /* Additional styling to increase the size of the bottom navbar */
-        .bottom-navbar {
-            padding: 15px 0; /* Increase padding */
-        }
-        .bottom-navbar .navbar-brand {
-            font-size: 1.8rem; /* Increase icon size */
-        }
-    </style>
 </head>
 
 <body>
-    <!-- Top Navbar -->
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid">
-            <a href="home.html" class="navbar-brand">
-                <img src="images/backicon.png" alt="Back" class="navbar-brand-icon">
-            </a>
-            <span class="navbar-text mx-auto" style="color: black; font-size: xx-large;">Favorites</span>
-            <a href="home.html" class="navbar-brand">
-                <img src="images/homeicon.png" alt="Homeicon.png" class="navbar-brand-icon">
-            </a>
+            <a class="navbar-brand" style="color: rgb(0, 87, 0);">My Favorites</a>
         </div>
     </nav>
 
-    <!-- Bus Stop Containers -->
-    <main class="mt-3">
-        <div class="favorite-container container">
-            <div class="favorite" data-stop="1">
-                <div class="title">Favorite 1</div>
-                <div class="bus-number">Bus number 1</div>
-            </div>
-            <div class="favorite" data-stop="2">
-                <div class="title">Favorite 2</div>
-                <div class="bus-number">Bus number 2</div>
-            </div>
-            <div class="favorite" data-stop="3">
-                <div class="title">Favorite 3</div>
-                <div class="bus-number">Bus number 3</div>
-            </div>
-            <div class="favorite" data-stop="4">
-                <div class="title">Favorite 4</div>
-                <div class="bus-number">Bus number 4</div>
-            </div>
-            <div class="favorite" data-stop="5">
-                <div class="title">Favorite 5</div>
-                <div class="bus-number">Bus number 5</div>
-            </div>
-            <div class="favorite" data-stop="6">
-                <div class="title">Favorite 6</div>
-                <div class="bus-number">Bus number 6</div>
-            </div>
-            <div class="favorite" data-stop="7">
-                <div class="title">Favorite 7</div>
-                <div class="bus-number">Bus number 7</div>
-            </div>
-            <div class="favorite" data-stop="8">
-                <div class="title">Favorite 8</div>
-                <div class="bus-number">Bus number 8</div>
-            </div>
-            <div class="favorite" data-stop="9">
-                <div class="title">Favorite 9</div>
-                <div class="bus-number">Bus number 9</div>
-            </div>
-            <div class="favorite" data-stop="10">
-                <div class="title">Favorite 10</div>
-                <div class="bus-number">Bus number 10</div>
-            </div>
-            <div class="favorite" data-stop="11">
-                <div class="title">Favorite 11</div>
-                <div class="bus-number">Bus number 11</div>
-            </div>
-            <div class="favorite" data-stop="12">
-                <div class="title">Favorite 12</div>
-                <div class="bus-number">Bus number 12</div>
-                
-            </div>
-            <div class="favorite" data-stop="13">
-                <div class="title">Favorite 13</div>
-                <div class="bus-number">Bus number 13</div>
-            </div>
-            <div class="favorite" data-stop="14">
-                <div class="title">Favorite 14</div>
-                <div class="bus-number">Bus number 14</div>
-            </div>
-            <div class="favorite" data-stop="15">
-                <div class="title">Favorite 15</div>
-                <div class="bus-number">Bus number 15</div>
-            </div>
-            <div class="favorite" data-stop="16">
-                <div class="title">Favorite 16</div>
-                <div class="bus-number">Bus number 16</div>
-            </div>
-            <div class="favorite" data-stop="17">
-                <div class="title">Favorite 17</div>
-                <div class="bus-number">Bus number 17</div>
-            </div>
-            <div class="favorite" data-stop="18">
-                <div class="title">Favorite 18</div>
-                <div class="bus-number">Bus number 18</div>
-            </div>
-            <div class="favorite" data-stop="19">
-                <div class="title">Favorite 19</div>
-                <div class="bus-number">Bus number 19</div>
-            </div>
-            <div class="favorite" data-stop="20">
-                <div class="title">Favorite 20</div>
-                <div class="bus-number">Bus number 20</div>
+    <main>
+        <div class="container">
+            <h2 class="mt-4">Your Favorite Stops</h2>
+            <div id="favoritesList" class="list-group">
+                <!-- Favorite stops will be populated here -->
+                 <!-- could not get it to work with original design-->
             </div>
         </div>
     </main>
 
-    <!-- Bottom Navbar -->
-    <footer class="navbar navbar-expand navbar-dark fixed-bottom bottom-navbar"
-        style="background-color: rgb(13, 173, 13); position: sticky; padding: 5px 0;">
-    <div class="container-fluid justify-content-around" style="float: right;">
-        <a href="login.html" class="navbar-brand" style="padding: 0;">
-            <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); font-size: 2.5rem;"></i>
-        </a>
-        <a href="home.html" class="navbar-brand" style="padding: 0;">
-            <i class="fas fa-home" style="color: rgb(0, 87, 0); font-size: 2.5rem;"></i>
-        </a>
-        <a href="favorites.html" class="navbar-brand" style="padding: 0;">
-            <i class="far fa-bookmark" style="color: rgb(0, 87, 0); font-size: 2.5rem;"></i>
-        </a>
-    </div>
-</footer>
+    <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
+        <div class="container-fluid justify-content-around">
+            <a href="login.html" class="navbar-brand">
+            <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+          <a href="home.html" class="navbar-brand">
+            <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            <a href="favorites.html" class="navbar-brand">
+                <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            </a>
+        </div>
+      </footer>
 
-    
-    
-    <!-- Bootstrap JavaScript Bundle (with Popper.js) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/saved.js"></script>
+    <script>
+        // Function to display favorite bus stops
+        function displayFavorites() {
+            const favoritesList = document.getElementById('favoritesList');
+            const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+
+            // Clear the existing list
+            favoritesList.innerHTML = '';
+
+            // Loop through favorites and create list items
+            for (const stopId in favorites) {
+                if (favorites.hasOwnProperty(stopId)) {
+                    const title = favorites[stopId];
+
+                    // Create a new list item
+                    const listItem = document.createElement('a');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    listItem.textContent = title;
+                    listItem.href = `route.html?stopId=${stopId}`; // Link to route page with stop ID (still have to create it in the future)
+                    favoritesList.appendChild(listItem);
+                }
+            }
+        }
+
+        // Call displayFavorites on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', displayFavorites);
+    </script>
+
 </body>
+
 </html>
