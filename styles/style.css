@@ -27,3 +27,30 @@ body {
     border-radius: 10px;
 }
 
+.star-rating {
+    display: flex;
+    padding-top: 10px;
+    gap: 20px;
+}
+
+.star {
+    color: gold; /* Gold color for stars */
+    font-size: 24px;
+    transition: color 0.2s ease;
+}
+
+.star.clickable {
+    cursor: pointer;
+}
+
+.star.filled {
+    color: gold; /* Filled star color */
+}
+
+.star:hover {
+    color: goldenrod; /* Slightly darker color on hover */
+}
+
+.star:not(.filled) {
+    color: grey;
+}

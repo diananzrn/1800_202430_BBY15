@@ -33,25 +33,26 @@ function loadBusStops() {
             const busStopData = doc.data();
             const stopId = doc.id;
 
-            // Determine which stop we're dealing with based on the document ID
             if (stopId === "TlHlIjyyzNlDDppmyFSb") {
-                // Update first bus stop
                 document.getElementById("stop1").textContent = busStopData.name;
                 document.getElementById("NB1").textContent = formatRouteNumber(busStopData.number1);
                 document.getElementById("NB2").textContent = formatRouteNumber(busStopData.number2);
                 document.getElementById("NB3").textContent = formatRouteNumber(busStopData.number3);
+                displayStars("stop1-stars", busStopData.stars, stopId); // Pass stopId here
             } else if (stopId === "jkbo3NGmM49mbWqhi1mA") {
-                // Update second bus stop
                 document.getElementById("stop2").textContent = busStopData.name;
                 document.getElementById("south1").textContent = formatRouteNumber(busStopData.number1);
                 document.getElementById("south2").textContent = formatRouteNumber(busStopData.number2);
                 document.getElementById("south3").textContent = formatRouteNumber(busStopData.number3);
+                displayStars("stop2-stars", busStopData.stars, stopId); // Pass stopId here
             }
         });
     }).catch(error => {
         console.error("Error loading bus stops: ", error);
     });
 }
+
+
 
 function formatRouteNumber(number) {
     return number.toString().padStart(3, '0');
@@ -225,3 +226,58 @@ function findNearbyBusStops(map, location) {
     );
 }
 
+//Function to display the star ratings in each bus stop
+function displayStars(elementId, currentStarCount, busStopId) {
+    const starContainer = document.getElementById(elementId);
+    starContainer.innerHTML = ""; // Clear any existing stars
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement("i");
+        star.classList.add("star", "fas", "fa-star");
+        star.classList.add("clickable");
+
+        if (i <= currentStarCount) {
+            star.classList.add("filled"); 
+        }
+
+        // Updates star rating when clicked
+        star.addEventListener("click", () => {
+            updateStarRating(i, busStopId, elementId); 
+        });
+
+        star.addEventListener("mouseout", () => displayStars(elementId, currentStarCount, busStopId));
+
+        starContainer.appendChild(star);
+    }
+}
+
+// Function to update the star rating in Firestore and display the updated count
+function updateStarRating(newStarCount, busStopId, elementId) {
+    displayStars(elementId, newStarCount, busStopId);
+
+    db.collection("bus_stops").doc(busStopId).update({
+        stars: newStarCount
+    })
+    .then(() => {
+        console.log(`Star rating updated to ${newStarCount}`);
+    })
+    .catch((error) => {
+        console.error("Error updating star rating:", error);
+    });
+}
+
+// Initial rendering based on Firestore data
+function loadStarRating(elementId, busStopId) {
+    db.collection("bus_stops").doc(busStopId).get()
+    .then((doc) => {
+        if (doc.exists) {
+            const starCount = doc.data().stars || 0;
+            displayStars(elementId, starCount, busStopId);
+        } else {
+            console.error("No such document!");
+        }
+    })
+    .catch((error) => {
+        console.error("Error fetching document:", error);
+    });
+}
