@@ -61,19 +61,10 @@ var uiConfig = {
     const loginContainer = document.getElementById('login-container');
 
     if (user) {
-
       if (loader) {
         loader.textContent = 'Already signed in!';
       }
-      if (loginContainer) {
-
-        loginContainer.style.display = 'none';
-      }
     } else {
-
-      if (loginContainer) {
-        loginContainer.style.display = 'block';
-      }
       ui.start('#firebaseui-auth-container', uiConfig);
     }
   });
