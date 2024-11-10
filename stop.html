@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,30 +14,28 @@
 </html>
 
 <style>
-/* All styles go here */
-#name{
-    font-size: 2.5em;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
+    /* All styles go here */
+    #name {
+        font-size: 2.5em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-#Details{
-    font-size: 2em;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
+    #Details {
+        font-size: 2em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-#far{
-    padding: 10px;
-}
+    #far {
+        padding: 10px;
+    }
 
-#traffic{
-    padding:10px;
-}
-
-
+    #traffic {
+        padding: 10px;
+    }
 </style>
 
 
@@ -60,34 +59,35 @@
 
     <main class="main-content">
 
-<h1 id="name">Name placeholder</h1>
+        <h1 id="name">Name placeholder</h1>
 
 
-<h2 id="Details">Details</h2>
+        <h2 id="Details">Details</h2>
 
 
 
 
-<div class="main-container" style="padding-bottom:10%;">
-    <div class="container-fluid">
-        <div class="row">
-            <hr>
-            <div id="map" style="width:100%;height:200px;"></div>
-        </div>
-    </div>
-    <br>
+        <div class="main-container" style="padding-bottom:10%;">
+            <div class="container-fluid">
+                <div class="row">
+                    <hr>
+                    <div id="map" style="width:100%;height:200px;"></div>
+                </div>
+            </div>
+            <br>
 
-    <h3 id="far">Distance:<Span id="Distance">Distance placeholder</Span></h3>
+            <h3 id="far">Distance:<Span id="Distance">Distance placeholder</Span></h3>
 
-    <br>
-    <h3 id="traffic"> Traffic: <span id="status"> Traffic Status</span></h3>
+            <br>
+            <h3 id="traffic"> Traffic: <span id="status"> Traffic Status</span></h3>
 
-    <div class="text-center mt-3">
-            <button class="btn btn-success" onclick="window.location.href='review.html'" style="background-color: rgb(13, 173, 13); border-color: rgb(0, 87, 0);">
-                <i class="fas fa-comment-alt"></i> Leave a Review
-            </button>
-        </div>
-    
+            <div class="text-center mt-3">
+                <button class="btn btn-success" onclick="window.location.href='review.html'"
+                    style="background-color: rgb(13, 173, 13); border-color: rgb(0, 87, 0);">
+                    <i class="fas fa-comment-alt"></i> Leave a Review
+                </button>
+            </div>
+
 
 
     </main>
@@ -98,21 +98,21 @@
     <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
-            <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
-          <a href="home.html" class="navbar-brand">
-            <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
-            <a href="favorites.html" class="navbar-brand">
-                <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
-            </a>
+                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                <a href="home.html" class="navbar-brand">
+                    <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                    <a href="favorites.html" class="navbar-brand">
+                        <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                    </a>
         </div>
-      </footer>
+    </footer>
 
 
 
 
 
 
-       <!-- Load Firebase first -->
+    <!-- Load Firebase first -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -123,6 +123,8 @@
     <script src="./scripts/stop.js"></script>
 
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD24YXLE6KvxKaX-iEcaDOIR0Dljq9esYs&callback=initMap&libraries=places"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD24YXLE6KvxKaX-iEcaDOIR0Dljq9esYs&callback=initMap&libraries=places"></script>
 </body>
+
 </html>
