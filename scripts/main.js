@@ -29,28 +29,57 @@ getNameFromAuth(); //run the function
 // Option 1: Only show bus stops to logged-in users (current implementation)
 function loadBusStops() {
     db.collection("bus_stops").get().then(querySnapshot => {
+        // Store all bus stops in an array
+        const busStops = [];
+        
         querySnapshot.forEach(doc => {
             const busStopData = doc.data();
             const stopId = doc.id;
-
-            if (stopId === "TlHlIjyyzNlDDppmyFSb") {
-                document.getElementById("stop1").textContent = busStopData.name;
-                document.getElementById("NB1").textContent = formatRouteNumber(busStopData.number1);
-                document.getElementById("NB2").textContent = formatRouteNumber(busStopData.number2);
-                document.getElementById("NB3").textContent = formatRouteNumber(busStopData.number3);
-                displayStars("stop1-stars", busStopData.stars, stopId); // Pass stopId here
-            } else if (stopId === "jkbo3NGmM49mbWqhi1mA") {
-                document.getElementById("stop2").textContent = busStopData.name;
-                document.getElementById("south1").textContent = formatRouteNumber(busStopData.number1);
-                document.getElementById("south2").textContent = formatRouteNumber(busStopData.number2);
-                document.getElementById("south3").textContent = formatRouteNumber(busStopData.number3);
-                displayStars("stop2-stars", busStopData.stars, stopId); // Pass stopId here
-            }
+            busStops.push({ stopId, ...busStopData }); // Add stopId and data to the array
         });
+
+        // Randomly select two bus stops
+        const randomBusStops = getRandomBusStops(busStops, 2);
+
+        // Display the details for the first random bus stop
+        const stop1 = randomBusStops[0];
+        document.getElementById("stop1").textContent = stop1.name;
+        document.getElementById("NB1").textContent = formatRouteNumber(stop1.number1);
+        document.getElementById("NB2").textContent = formatRouteNumber(stop1.number2);
+        document.getElementById("NB3").textContent = formatRouteNumber(stop1.number3);
+        displayStars("stop1-stars", stop1.stars, stop1.stopId); // Pass stopId here
+
+        // Display the details for the second random bus stop
+        const stop2 = randomBusStops[1];
+        document.getElementById("stop2").textContent = stop2.name;
+        document.getElementById("south1").textContent = formatRouteNumber(stop2.number1);
+        document.getElementById("south2").textContent = formatRouteNumber(stop2.number2);
+        document.getElementById("south3").textContent = formatRouteNumber(stop2.number3);
+        displayStars("stop2-stars", stop2.stars, stop2.stopId); // Pass stopId here
+
     }).catch(error => {
         console.error("Error loading bus stops: ", error);
     });
 }
+
+// Helper function to get 'n' random bus stops from the array
+function getRandomBusStops(busStops, n) {
+    const randomBusStops = [];
+    const usedIndexes = new Set(); // To keep track of used indexes and avoid duplicates
+    
+    while (randomBusStops.length < n) {
+        const randomIndex = Math.floor(Math.random() * busStops.length);
+        
+        // Ensure no duplicates are added
+        if (!usedIndexes.has(randomIndex)) {
+            randomBusStops.push(busStops[randomIndex]);
+            usedIndexes.add(randomIndex);
+        }
+    }
+
+    return randomBusStops;
+}
+ 
 
 
 
@@ -281,3 +310,7 @@ function loadStarRating(elementId, busStopId) {
         console.error("Error fetching document:", error);
     });
 }
+
+ 
+
+
