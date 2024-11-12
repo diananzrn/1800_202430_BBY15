@@ -8,7 +8,10 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
-    </head>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+</head>
 
 <body>
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
@@ -43,10 +46,10 @@
                         </div>
                         <div class="star-rating" id="stop1-stars"></div> <!-- stop 1 stars -->
                         <i class="far fa-bookmark" data-stop-id="stop1" style="float: right; scale: 2;"></i>
-                        <a href="#" class="btn" style="margin-top: 3%;">Go to route</a>
+                        <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
                 </div>
-                
+
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
                         <h5 class="card-title" id="stop2"></h5>
@@ -57,14 +60,14 @@
                         </div>
                         <div class="star-rating" id="stop2-stars"></div> <!-- stop 2 stars -->
                         <i class="far fa-bookmark" data-stop-id="stop2" style="float: right; scale: 2;"></i>
-                        <a href="#" class="btn" style="margin-top: 3%;">Go to route</a>
+                        <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
         </div>
-        
+
 
 
     </main>
@@ -72,14 +75,16 @@
     <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
-            <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
-          <a href="home.html" class="navbar-brand">
-            <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            </a>
+            <a href="home.html" class="navbar-brand">
+                <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            </a>
             <a href="favorites.html" class="navbar-brand">
                 <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
             </a>
         </div>
-      </footer>
+    </footer>
 
     <!-- Load Firebase first -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -91,6 +96,7 @@
 
     <!-- Finally load your main script -->
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/map.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Retrieve favorites from localStorage
@@ -141,7 +147,6 @@
         }
     </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD24YXLE6KvxKaX-iEcaDOIR0Dljq9esYs&callback=initMap&libraries=places"></script>
 
 
 
