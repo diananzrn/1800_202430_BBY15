@@ -8,6 +8,9 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
 </head>
 
 <body>
@@ -52,7 +55,7 @@
                             Average Rating: <span id="stop1-average">0</span> / 5
                         </div>
                         <i class="far fa-bookmark" data-stop-id="stop1" style="float: right; scale: 2;"></i>
-                        <a href="#" class="btn" style="margin-top: 3%;">Go to route</a>
+                        <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
                 </div>
 
@@ -75,7 +78,7 @@
                             Average Rating: <span id="stop2-average">0</span> / 5
                         </div>
                         <i class="far fa-bookmark" data-stop-id="stop2" style="float: right; scale: 2;"></i>
-                        <a href="#" class="btn" style="margin-top: 3%;">Go to route</a>
+                        <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
 
                 </div>
@@ -90,9 +93,9 @@
     <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
-                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
                 <a href="home.html" class="navbar-brand">
-                    <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                    <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
                     <a href="favorites.html" class="navbar-brand">
                         <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
                     </a>
@@ -109,6 +112,7 @@
 
     <!-- Finally load your main script -->
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/map.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Retrieve favorites from localStorage
