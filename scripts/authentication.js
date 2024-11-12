@@ -20,8 +20,8 @@ var uiConfig = {
             db.collection("users").doc(user.uid).set({         //write to firestore. We are using the UID for the ID in users collection
                    name: user.displayName,                    //"users" collection
                    email: user.email,                         //with authenticated user's ID (user.uid)
-                   country: "Canada",                      //optional default profile info      
-                   school: "BCIT"                          //optional default profile info
+                   city: "Burnaby",                      //optional default profile info      
+                   favorite: "N/A"                          //optional default profile info
             }).then(function () {
                    console.log("New user added to firestore");
                    window.location.assign("home.html");       //re-direct to home.html after signup
@@ -58,14 +58,31 @@ var uiConfig = {
   };
 
   firebase.auth().onAuthStateChanged((user) => {
-    const loginContainer = document.getElementById('login-container');
+    const mainContainer = document.querySelector('main');
+    const loader = document.getElementById('loader');
 
     if (user) {
-      if (loader) {
-        loader.textContent = 'Already signed in!';
-      }
+        // User is signed in, load the profile layout
+        fetch('profile.html')
+            .then(response => response.text())
+            .then(profileHTML => {
+                mainContainer.innerHTML = profileHTML;
+                if (loader) loader.style.display = 'none';
+            })
+            .catch(error => console.error("Error loading profile:", error));
     } else {
-      ui.start('#firebaseui-auth-container', uiConfig);
+        // No user is signed in, show the login UI
+        if (mainContainer) {
+            mainContainer.innerHTML = `
+                <div class="container" style="padding: 10px;">
+                    <h1>Let's Login!</h1>
+                </div>
+                <div id="firebaseui-auth-container"></div>
+                <div id="loader">Loading...</div>
+            `;
+        }
+        ui.start('#firebaseui-auth-container', uiConfig);
     }
-  });
+});
+
 
