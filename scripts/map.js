@@ -117,6 +117,7 @@ function showMap() {
         zoom: 14 // Starting zoom
     });
 
+
     // Add user controls to map, zoom bar
     map.addControl(new mapboxgl.NavigationControl());
 
@@ -134,9 +135,6 @@ function showMap() {
         //--------------------------------------
         // Add interactive pin for the user's location
         //--------------------------------------
-
-
-
         addUserPinCustomImage(map);
 
     });
