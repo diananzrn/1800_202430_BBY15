@@ -8,9 +8,12 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+<<<<<<< HEAD
 
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+=======
+>>>>>>> e8cddcbfe599847864540aff57bb50708ada312b
 </head>
 
 <body>
@@ -38,13 +41,22 @@
             <div id="bus-stop-list">
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
-                        <h5 class="card-title" id="stop1"></h5>
+                        <a href="stop.html">
+                            <h5 class="card-title" id="stop1" onclick="storeStopName(this)"></h5>
+                        </a>
                         <div class="routes">
                             <span class="route-number" id="NB1"></span>
                             <span class="route-number" id="NB2"></span>
                             <span class="route-number" id="NB3"></span>
                         </div>
-                        <div class="star-rating" id="stop1-stars"></div> <!-- stop 1 stars -->
+
+                        <!-- stop 1 clickable stars -->
+                        <div class="star-rating" id="stop1-stars"></div> 
+
+                        <!-- stop 1 average star rating -->
+                        <div class="average-stars">
+                            Average Rating: <span id="stop1-average">0</span> / 5
+                        </div>
                         <i class="far fa-bookmark" data-stop-id="stop1" style="float: right; scale: 2;"></i>
                         <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
@@ -52,13 +64,22 @@
 
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
-                        <h5 class="card-title" id="stop2"></h5>
+                        <a href="stop.html">
+                            <h5 class="card-title" id="stop2" onclick="storeStopName(this)"></h5>
+                        </a>
                         <div class="routes">
                             <span class="route-number" id="south1"></span>
                             <span class="route-number" id="south2"></span>
                             <span class="route-number" id="south3"></span>
                         </div>
-                        <div class="star-rating" id="stop2-stars"></div> <!-- stop 2 stars -->
+
+                        <!-- stop 2 clickable stars -->
+                        <div class="star-rating" id="stop2-stars"></div>
+
+                        <!-- stop 2 average star rating -->
+                        <div class="average-stars">
+                            Average Rating: <span id="stop2-average">0</span> / 5
+                        </div>
                         <i class="far fa-bookmark" data-stop-id="stop2" style="float: right; scale: 2;"></i>
                         <a href="#" class="btn" style="margin-top: 3%;">Go to stop</a>
                     </div>
@@ -76,6 +97,7 @@
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
                 <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+<<<<<<< HEAD
             </a>
             <a href="home.html" class="navbar-brand">
                 <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
@@ -83,6 +105,13 @@
             <a href="favorites.html" class="navbar-brand">
                 <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
             </a>
+=======
+                <a href="home.html" class="navbar-brand">
+                    <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                    <a href="favorites.html" class="navbar-brand">
+                        <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+                    </a>
+>>>>>>> e8cddcbfe599847864540aff57bb50708ada312b
         </div>
     </footer>
 
@@ -145,8 +174,26 @@
             localStorage.setItem('favorites', JSON.stringify(favorites));
             console.log(`Removed from favorites: ${stopId}`);
         }
+
+
+
+
+        // Function to store the stop name in localStorage
+        // Function to store the stop name dynamically
+        function storeStopName(stopElement) {
+            const stopName = stopElement.textContent || stopElement.innerText;  // Get the name of the stop
+            localStorage.setItem('busStopName', stopName);  // Store it in localStorage
+            window.location.href = 'stop.html';  // Redirect to the stop details page
+        }
+
+
     </script>
 
+<<<<<<< HEAD
+=======
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD24YXLE6KvxKaX-iEcaDOIR0Dljq9esYs&callback=initMap&libraries=places"></script>
+>>>>>>> e8cddcbfe599847864540aff57bb50708ada312b
 
 
 
