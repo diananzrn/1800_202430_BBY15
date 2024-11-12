@@ -28,7 +28,8 @@ getNameFromAuth(); //run the function
 
 // Option 1: Only show bus stops to logged-in users (current implementation)
 function loadBusStops() {
-    db.collection("bus_stops").get().then(querySnapshot => {
+    db.collection("bus_stops").get()
+        .then(querySnapshot => {
         // Store all bus stops in an array
         const busStops = [];
         
@@ -48,7 +49,7 @@ function loadBusStops() {
         document.getElementById("NB2").textContent = formatRouteNumber(stop1.number2);
         document.getElementById("NB3").textContent = formatRouteNumber(stop1.number3);
         displayStars("stop1-stars", stop1.stars, stop1.stopId); // Pass stopId here
-        displayAverageStars("stop1-average", stop1.stopId); // Displays average rating
+        displayAverageStars(stop1.stopId, "stop1-average"); // Displays average rating
 
         // Display the details for the second random bus stop
         const stop2 = randomBusStops[1];
@@ -57,7 +58,7 @@ function loadBusStops() {
         document.getElementById("south2").textContent = formatRouteNumber(stop2.number2);
         document.getElementById("south3").textContent = formatRouteNumber(stop2.number3);
         displayStars("stop2-stars", stop2.stars, stop2.stopId); // Pass stopId here
-        displayAverageStars("stop2-average", stop2.stopId); // Displays average rating
+        displayAverageStars(stop2.stopId, "stop2-average"); // Displays average rating
 
     }).catch(error => {
         console.error("Error loading bus stops: ", error);
@@ -258,52 +259,67 @@ function findNearbyBusStops(map, location) {
 }
 
 // Display the star rating (and options) in each bus stop
-function displayStars(elementId, currentStarCount, busStopId) {
+function displayStars(elementId, busStopId) {
+    const userId = firebase.auth().currentUser?.uid;
     const starContainer = document.getElementById(elementId);
     starContainer.innerHTML = ""; // Clear any existing stars
 
-    for (let i = 1; i <= 5; i++) {
-        const star = document.createElement("i");
-        star.classList.add("star", "fas", "fa-star");
-        star.classList.add("clickable");
+    if (userId) {
+        db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).get()
+            .then(doc => {
+                const userStarCount = doc.exists ? doc.data().starRating : 0; // Defaults to 0 if no rating
+            
 
-        // Sets the star colour based on the rating
-        if (i <= currentStarCount) {
-            star.classList.add("filled"); // Filled = yellow
-        } else {
-            star.classList.add("unfilled"); // Unfilled = grey
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement("i");
+            star.classList.add("star", "fas", "fa-star");
+            star.classList.add("clickable");
+
+            // Sets the star colour based on the rating
+            if (i <= currentStarCount) {
+                star.classList.add("filled"); // Filled = yellow
+            } else {
+                star.classList.add("empty"); // Unfilled = grey
+            }
+
+            // Updates star rating when clicked
+            star.addEventListener("click", () => {
+                updateStarRating(i, busStopId, elementId); 
+            });
+
+            star.addEventListener("mouseout", () => displayStars(elementId, busStopId));
+
+            starContainer.appendChild(star);
         }
-
-        // Updates star rating when clicked
-        star.addEventListener("click", () => {
-            updateStarRating(i, busStopId, elementId); 
+        })
+        .catch(error => {
+            console.error("Error fetching user star rating:", error)
         });
-
-        star.addEventListener("mouseout", () => displayStars(elementId, currentStarCount, busStopId));
-
-        starContainer.appendChild(star);
+    } else {
+    console.log("No user is logged in");
     }
 }
 
 // Update the star rating in Firestore and display the updated count
-function updateStarRating(newStarCount, busStopId, elementId) {
-    // Updates the display
-    displayStars(elementId, newStarCount, busStopId);
+function updateStarRating(newRating, busStopId, elementId) {
+    const userId = firebase.auth().currentUser?.uid;
 
-    const userId = firebase.auth().currentUser.uid;
-    if (!userId) return; // Checks if the user is logged in
-
-    // Stores the new rating in the ratings subcollection of the bus stop
-    db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).set({
-        stars: newStarCount
-    })
-    .then(() => {
-        console.log(`Star rating updated to ${newStarCount} for user ${userId}` );
-    })
-    .catch((error) => {
-        console.error("Error updating star rating:", error);
-    });
+    if (userId) {
+        // Update the user's rating in Firestore
+        db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).set({
+            stars: newRating
+        }).then(() => {
+            console.log(`Rating updated to ${newRating} stars`);
+            // Refresh the display to show updated stars
+            displayStars(elementId, busStopId);
+        }).catch(error => {
+            console.error("Error updating rating:", error);
+        });
+    } else {
+        console.log("No user is logged in");
+    }
 }
+
 
 // Initial rendering based on Firestore data
 function loadStarRating(elementId, busStopId) {
@@ -311,7 +327,7 @@ function loadStarRating(elementId, busStopId) {
     .then((doc) => {
         if (doc.exists) {
             const starCount = doc.data().stars || 0;
-            displayStars(elementId, starCount, busStopId);
+            displayStars(elementId, busStopId);
         } else {
             console.error("No such document!");
         }
@@ -322,28 +338,26 @@ function loadStarRating(elementId, busStopId) {
 }
 
 // Calculate and display the average star rating of a bus stop
-function displayAverageStars(elementId, busStopId) {
-
-    const ratingsRef = db.collection("bus_stops").doc(busStopId).collection("ratings");
-
-    ratingsRef.get().then((querySnapshot) => {
+function displayAverageStars(busStopId, elementId) {
+    db.collection("bus_stops").doc(busStopId).collection("ratings").get()
+    .then(querySnapshot => {
         let totalStars = 0;
-        let ratingCount = 0;
+        let userCount = 0;
 
-        querySnapshot.forEach((dog) => {
-            const ratingData = doc.data();
-            if (ratingData.starCount) {
-                totalStars += ratingData.starCount;
-                ratingCount += 1;
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.stars) {
+                totalStars += data.stars;
+                userCount++;
             }
         });
 
-        // Calculates the average rating
-        const averageRating = ratingCount > 0 ? totalStars / ratingCount : 0;
-
-        // Updates the UI to show the average rating
-        displayStars(elementId, Math.round(averageRating)); // Displays the average rounded
-    }).catch((error) => {
-        console.error("Error calculating average star rating:", error);
+        const averageRating = userCount > 0 ? (totalStars / userCount).toFixed(1) : "No ratings";
+        
+        document.getElementById(elementId).textContent = averageRating;
+    })
+    .catch(error => {
+        console.error("Error calculating average rating:", error);
     });
 }
+
