@@ -54,3 +54,13 @@ body {
 .star:not(.filled) {
     color: grey;
 }
+
+.average-stars {
+    font-size: 1.2em;
+    margin-top: 8px;
+    color: gray;
+}
+
+.average-stars span {
+    font-weight: bold;
+}
