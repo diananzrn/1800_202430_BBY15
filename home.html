@@ -16,15 +16,10 @@
 <body>
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid">
-            <a class="navbar-brand" style="color: rgb(0, 87, 0);">Where to?</a>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                    style="border-radius: 2em;   width: 100%;">
-                <button class="btn" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
+            <a class="navbar-brand" style="color: rgb(0, 87, 0);">EZTransit</a>
+            
+              </div>
+       
     </nav>
 
     <main>
@@ -39,11 +34,14 @@
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
                         <a href="stop.html">
-                            <h5 class="card-title" id="stop1" onclick="storeStopName(this)"></h5>
+                            <h5 class="card-title" id="stop1" onclick="storeStopName(this)" data-id="stop1"></h5>
                         </a>
                         <div class="routes">
+
                             <span class="route-number" id="NB1"></span>
+                            <!-- The latitude  -->
                             <span class="route-number" id="NB2"></span>
+                            <!-- The longitudee  -->
                             <span class="route-number" id="NB3"></span>
                         </div>
 
@@ -62,11 +60,13 @@
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
                         <a href="stop.html">
-                            <h5 class="card-title" id="stop2" onclick="storeStopName(this)"></h5>
+                            <h5 class="card-title" id="stop2" onclick="storeStopName(this)" data-id="stop2"></h5>
                         </a>
                         <div class="routes">
                             <span class="route-number" id="south1"></span>
+                            <!-- The latitude  -->
                             <span class="route-number" id="south2"></span>
+                            <!-- The longitude  --> 
                             <span class="route-number" id="south3"></span>
                         </div>
 
