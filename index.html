@@ -24,6 +24,18 @@
       background-color: rgb(13, 173, 13);
     }
 
+    .btn {
+            background-color: rgb(238, 255, 238);
+            color: rgb(0, 87, 0);
+            margin-top: 1%;
+            border-color: rgb(0, 87, 0);
+        }
+
+        .btn:hover {
+            background-color: rgb(0, 87, 0);
+            color: rgb(238, 255, 238);
+        }
+
       footer li {
         background-color: rgb(13, 173, 13);
         border-radius:5px;
@@ -52,12 +64,23 @@
             <a class="nav-link" href="#">Features</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="about.html">About</a>
           </li>
         </ul>
         <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Explore
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="margin-left: 4%;">
+                <li><a class="dropdown-item" href="index.html">Main Page</a></li>
+                <li><a class="dropdown-item" href="profile.html">Your Profile</a></li>
+                <li><a class="dropdown-item" href="favorites.html">Favorites</a></li>
+                <li><a class="dropdown-item" href="#">Logout</a></li>
+            </ul>
+        </div>
         </form>
       </div>
     </div>
@@ -82,7 +105,7 @@
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+      <li class="nav-item"><a href="about.html" class="nav-link px-2 text-body-secondary">About</a></li>
     </ul>
     <p class="text-center text-body-secondary">© 2024 BBY_15</p>
   </footer>
