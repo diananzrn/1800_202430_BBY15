@@ -28,8 +28,7 @@ getNameFromAuth(); //run the function
 
 // Option 1: Only show bus stops to logged-in users (current implementation)
 function loadBusStops() {
-    db.collection("bus_stops").get()
-        .then(querySnapshot => {
+    db.collection("bus_stops").get().then(querySnapshot => {
         // Store all bus stops in an array
         const busStops = [];
         
@@ -50,6 +49,7 @@ function loadBusStops() {
         document.getElementById("NB3").textContent = formatRouteNumber(stop1.number3);
         displayStars("stop1-stars", stop1.stars, stop1.stopId); // Pass stopId here
         displayAverageStars(stop1.stopId, "stop1-average"); // Displays average rating
+
 
         // Display the details for the second random bus stop
         const stop2 = randomBusStops[1];
@@ -82,9 +82,6 @@ function getRandomBusStops(busStops, n) {
 
     return randomBusStops;
 }
- 
-
-
 
 function formatRouteNumber(number) {
     return number.toString().padStart(3, '0');
@@ -104,15 +101,15 @@ function initializePage() {
                 nameElement.innerText = userName;
             }
 
-            // Load bus stop data only for logged-in users
-            loadBusStops();
-        } else {
-            console.log("No user is logged in");
-            // Optionally redirect to login page
-            // window.location.href = 'login.html';
-        }
-    });
-}
+             // Load bus stop data only for logged-in users
+             loadBusStops();
+            } else {
+                console.log("No user is logged in");
+                // Optionally redirect to login page
+                // window.location.href = 'login.html';
+            }
+        });
+    }
 
 // Option 2: Show bus stops to everyone, but still handle user auth
 function initializePagePublic() {
@@ -143,65 +140,62 @@ document.addEventListener('DOMContentLoaded', initializePagePublic); // For publ
 
 
 // Display the star rating (and options) in each bus stop
-function displayStars(elementId, busStopId) {
-    const userId = firebase.auth().currentUser?.uid;
+// Display the star rating (and options) in each bus stop
+function displayStars(elementId, currentStarCount, busStopId) {
     const starContainer = document.getElementById(elementId);
     starContainer.innerHTML = ""; // Clear any existing stars
 
-    if (userId) {
-        db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).get()
-            .then(doc => {
-                const userStarCount = doc.exists ? doc.data().starRating : 0; // Defaults to 0 if no rating
-            
+    const userId = firebase.auth().currentUser.uid;
+    db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).get()
+        .then(doc => {
+            const userStarCount = doc.exists ? doc.data().starRating : 0; // Defaults to 0 if no rating
 
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement("i");
-            star.classList.add("star", "fas", "fa-star");
-            star.classList.add("clickable");
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement("i");
+                star.classList.add("star", "fas", "fa-star");
+                star.classList.add("clickable");
+        
+                // Sets the star colour based on the rating
+                if (i <= currentStarCount) {
+                    star.classList.add("filled"); // Filled = yellow
+                } else {
+                    star.classList.add("unfilled"); // Unfilled = grey
+                }
+        
+                // Updates star rating when clicked
+                star.addEventListener("click", () => {
+                    updateStarRating(i, busStopId, elementId); 
+                });
+        
+                star.addEventListener("mouseout", () => displayStars(elementId, currentStarCount, busStopId));
 
-            // Sets the star colour based on the rating
-            if (i <= currentStarCount) {
-                star.classList.add("filled"); // Filled = yellow
-            } else {
-                star.classList.add("empty"); // Unfilled = grey
+                starContainer.appendChild(star);
             }
-
-            // Updates star rating when clicked
-            star.addEventListener("click", () => {
-                updateStarRating(i, busStopId, elementId); 
+            })
+            .catch(error => {
+                console.error("Error fetching user star rating:", error)
             });
-
-            star.addEventListener("mouseout", () => displayStars(elementId, busStopId));
-
-            starContainer.appendChild(star);
         }
-        })
-        .catch(error => {
-            console.error("Error fetching user star rating:", error)
-        });
-    } else {
-    console.log("No user is logged in");
-    }
-}
 
 // Update the star rating in Firestore and display the updated count
-function updateStarRating(newRating, busStopId, elementId) {
-    const userId = firebase.auth().currentUser?.uid;
+function updateStarRating(newStarCount, busStopId, elementId) {
+    // Updates the display
+    
+    displayStars(elementId, newStarCount, busStopId);
 
-    if (userId) {
+    const userId = firebase.auth().currentUser.uid;
+    if (!userId) return; // Checks if the user is logged in
+
         // Update the user's rating in Firestore
         db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).set({
-            stars: newRating
+            stars: newStarCount
         }).then(() => {
-            console.log(`Rating updated to ${newRating} stars`);
+            console.log(`Rating updated to ${newStarCount} stars`);
             // Refresh the display to show updated stars
             displayStars(elementId, busStopId);
         }).catch(error => {
             console.error("Error updating rating:", error);
         });
-    } else {
-        console.log("No user is logged in");
-    }
 }
 
 
@@ -211,7 +205,7 @@ function loadStarRating(elementId, busStopId) {
     .then((doc) => {
         if (doc.exists) {
             const starCount = doc.data().stars || 0;
-            displayStars(elementId, busStopId);
+            displayStars(elementId, starCount, busStopId);
         } else {
             console.error("No such document!");
         }
