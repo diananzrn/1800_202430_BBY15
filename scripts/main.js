@@ -207,7 +207,7 @@ function updateStarRating(newStarCount, busStopId, elementId) {
     if (!userId) return; // Checks if the user is logged in
 
         // Update the user's rating in Firestore
-        db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).set({
+        db.collection("stops").doc(busStopId).collection("ratings").doc(userId).set({
             stars: newStarCount
         }).then(() => {
             console.log(`Rating updated to ${newStarCount} stars`);
@@ -221,7 +221,7 @@ function updateStarRating(newStarCount, busStopId, elementId) {
 
 // Initial rendering based on Firestore data
 function loadStarRating(elementId, busStopId) {
-    db.collection("bus_stops").doc(busStopId).get()
+    db.collection("stops").doc(busStopId).get()
     .then((doc) => {
         if (doc.exists) {
             const starCount = doc.data().stars || 0;
@@ -237,7 +237,7 @@ function loadStarRating(elementId, busStopId) {
 
 // Calculate and display the average star rating of a bus stop
 function displayAverageStars(busStopId, elementId) {
-    db.collection("bus_stops").doc(busStopId).collection("ratings").get()
+    db.collection("stops").doc(busStopId).collection("ratings").get()
     .then(querySnapshot => {
         let totalStars = 0;
         let userCount = 0;
