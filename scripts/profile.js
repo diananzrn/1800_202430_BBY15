@@ -44,24 +44,21 @@ function editUserInfo() {
 
  function saveUserInfo() {
 
-    // get user entered values
-    userName = document.getElementById('nameInput').value;       // get the value of the field with id="nameInput"
-    userFavoriteBus = document.getElementById('favoriteBusInput').value;     // get the value of the field with id="favoriteBusInput"
-    userCity = document.getElementById('cityInput').value;       // get the value of the field with id="cityInput"
-    
-
-    // update user's document in Firestore
-    currentUser.update({
-        name: userName,
-        favorite: userFavoriteBus,
-        city: userCity
-    })
-    .then(() => {
-        console.log("Document successfully updated!");
-    })
-
-    // disable edit 
-    document.getElementById('personalInfoFields').disabled = true;
+        // get user entered values
+        userName = document.getElementById('nameInput').value;       // get the value of the field with id="nameInput"
+        userFavoriteBus = document.getElementById('favoriteBusInput').value;     // get the value of the field with id="favoriteBusInput"
+        userCity = document.getElementById('cityInput').value;       // get the value of the field with id="cityInput"
+        
+        // update user's document in Firestore
+        currentUser.update({
+            name: userName,
+            favorite: userFavoriteBus,
+            city: userCity,
+        })
+        .then(() => {
+            console.log("Document successfully updated!");
+            document.getElementById('personalInfoFields').disabled = true;
+        })
 }
 
 function logout() {

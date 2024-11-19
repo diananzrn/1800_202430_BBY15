@@ -21,6 +21,8 @@
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                     style="border-radius: 2em;   width: 100%;">
+                    
+
                 <button class="btn" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
@@ -34,8 +36,7 @@
             <h1 style="padding-bottom:5%">User Profile</h1>
 
             <!-- Editable info fieldset for User's name, Fav bus, and City -->
-            <form>
-                <fieldset class="mb-3" id="personalInfoFields" disabled>
+            <form>                    
                     <div class="form-group" style="padding-bottom:10px">
                         <label >Name</label>
                         <input type="text" id="nameInput" class="form-control" placeholder="Enter your name">
@@ -80,6 +81,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="./scripts/firebaseAPI_TEAM15.js"></script>
     <script src="./scripts/profile.js"></script>
 </body>
