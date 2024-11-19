@@ -28,7 +28,7 @@ getNameFromAuth(); //run the function
 
 // Option 1: Only show bus stops to logged-in users (current implementation)
 function loadBusStops() {
-    db.collection("bus_stops").get().then(querySnapshot => {
+    db.collection("stops").get().then(querySnapshot => {
         // Store all bus stops in an array
         const busStops = [];
         
@@ -46,14 +46,14 @@ function loadBusStops() {
         // Display the details for the first random bus stop
         const stop1 = randomBusStops[0];
         document.getElementById("stop1").textContent = stop1.name;
-        document.getElementById("NB1").textContent = formatRouteNumber(stop1.number1);
-        document.getElementById("NB2").textContent = formatRouteNumber(stop1.number2);
-        document.getElementById("NB3").textContent = formatRouteNumber(stop1.number3);
+        document.getElementById("NB1").textContent = formatRouteNumber(stop1.id);
+        document.getElementById("NB2").textContent = formatRouteNumber(stop1.lat);
+        document.getElementById("NB3").textContent = formatRouteNumber(stop1.lng);
         displayStars("stop1-stars", stop1.stars, stop1.stopId); // Pass stopId here
         displayAverageStars(stop1.stopId, "stop1-average"); // Displays average rating
 
         // Fetch and display the user's rating for stop1
-        db.collection("bus_stops").doc(stop1.stopId).collection("ratings").doc(userId).get()
+        db.collection("stops").doc(stop1.stopId).collection("ratings").doc(userId).get()
         .then(doc => {
             const userRating = doc.exists ? doc.data().stars : 0; // Default to 0 if no rating exists
             displayStars("stop1-stars", userRating, stop1.stopId);
@@ -63,14 +63,14 @@ function loadBusStops() {
         // Display the details for the second random bus stop
         const stop2 = randomBusStops[1];
         document.getElementById("stop2").textContent = stop2.name;
-        document.getElementById("south1").textContent = formatRouteNumber(stop2.number1);
-        document.getElementById("south2").textContent = formatRouteNumber(stop2.number2);
-        document.getElementById("south3").textContent = formatRouteNumber(stop2.number3);
+        document.getElementById("south1").textContent = formatRouteNumber(stop2.id);
+        document.getElementById("south2").textContent = formatRouteNumber(stop2.lat);
+        document.getElementById("south3").textContent = formatRouteNumber(stop2.lng);
         displayStars("stop2-stars", stop2.stars, stop2.stopId); // Pass stopId here
         displayAverageStars(stop2.stopId, "stop2-average"); // Displays average rating
 
         // Fetch and display the user's rating for stop2
-        db.collection("bus_stops").doc(stop2.stopId).collection("ratings").doc(userId).get()
+        db.collection("stops").doc(stop2.stopId).collection("ratings").doc(userId).get()
         .then(doc => {
             const userRating = doc.exists ? doc.data().stars : 0; // Default to 0 if no rating exists
             displayStars("stop2-stars", userRating, stop2.stopId);
