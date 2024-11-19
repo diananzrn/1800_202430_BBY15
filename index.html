@@ -2,72 +2,96 @@
 <html lang="en">
 
 <head>
-    <title>My BCIT Project</title>
-    <meta name="comp1800 template" content="My 1800 App">
+  <title>My BCIT Project</title>
+  <meta name="comp1800 template" content="My 1800 App">
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="./images/Bus_Logo.jpg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
 
-    <!-- Other libraries go here -->
+  <!-- Other libraries go here -->
 
-    <style>
-      .navbar{
-        background-color: rgb(13, 173, 13);
-      } 
-.navbar.navbar-expand-lg.navbar-light {
-    padding: auto;
-    margin: auto;
-    width: 100%;
-    font-size: x-large;       
-}
+  <style>
+    .navbar {
+      background-color: rgb(13, 173, 13);
+    }
+
+    .btn {
+            background-color: rgb(238, 255, 238);
+            color: rgb(0, 87, 0);
+            margin-top: 1%;
+            border-color: rgb(0, 87, 0);
+        }
+
+        .btn:hover {
+            background-color: rgb(0, 87, 0);
+            color: rgb(238, 255, 238);
+        }
 
       footer li {
         background-color: rgb(13, 173, 13);
         border-radius:5px;
+        margin: 3px;
       }
 
-    </style>
-    <!-- <link rel="stylesheet" href="./styles/style.css"> -->
+    footer li {
+      background-color: rgb(13, 173, 13);
+      border-radius: 5px;
+    }
+  </style>
+  <!-- <link rel="stylesheet" href="./styles/style.css"> -->
 
 </head>
 
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-light">
-      <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav me-auto">
-                  <li class="nav-item active">
-                      <a class="nav-link" href="#">Home<span class="sr-only"></span></a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#">Features</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#">About</a>
-                  </li>
-              </ul>
-              <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
-          </div>
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home<span class="sr-only"></span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Explore
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="margin-left: 4%;">
+                <li><a class="dropdown-item" href="index.html">Main Page</a></li>
+                <li><a class="dropdown-item" href="profile.html">Your Profile</a></li>
+                <li><a class="dropdown-item" href="favorites.html">Favorites</a></li>
+                <li><a class="dropdown-item" href="#">Logout</a></li>
+            </ul>
+        </div>
+        </form>
       </div>
+    </div>
   </nav>
-    
+
   <div class="px-4 py-5 my-5 text-center">
     <img class="d-block mx-auto mb-4" src="./images/Bus_Logo.jpg" alt="" width="72" height="57">
     <h1 class="display-5 fw-bold">Welcome to EZTransit!</h1>
     <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Looking for a reliable, easy, and smooth Transit experience? EZTransit is your ultimate guide for navigating the best routes and keeping track of bus schedueles.</p>
+      <p class="lead mb-4">Looking for a reliable, easy, and smooth Transit experience? EZTransit is your ultimate guide
+        for navigating the best routes and keeping track of bus schedueles.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <button type="button" class="btn btn-success btn-lg px-4 gap-3">Explore Routes</button>
         <button type="button" class="btn btn-outline-secondary btn-lg px-4" href="login.html">Create Account</button>
@@ -81,19 +105,19 @@
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+      <li class="nav-item"><a href="about.html" class="nav-link px-2 text-body-secondary">About</a></li>
     </ul>
     <p class="text-center text-body-secondary">© 2024 BBY_15</p>
   </footer>
-  
 
 
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
 
-    <!-- Link to scripts of your own -->
-    <!-- <script src="./scripts/script.js"></script> -->
+  <!---------------------------------------------->
+  <!-- Your own JavaScript functions go here    -->
+  <!---------------------------------------------->
+
+  <!-- Link to scripts of your own -->
+  <!-- <script src="./scripts/script.js"></script> -->
 
 </body>
 

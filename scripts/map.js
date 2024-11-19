@@ -12,7 +12,7 @@ function addHikePins(map) {
             map.addImage('eventpin', image); // Pin Icon
 
             // READING information from "events" collection in Firestore
-            db.collection('burnaby_stops').get().then(allEvents => {
+            db.collection('stops').get().then(allEvents => {
                 const features = []; // Defines an empty array for information to be added to
 
                 allEvents.forEach(doc => {
@@ -163,7 +163,7 @@ function addUserPinCustomImage(map) {
                 console.log(userLocation);
                 if (userLocation) {
                     // If we got a user location, center the map there
-                    
+
                     map.setCenter(userLocation);
                     map.addSource('userLocation', {
                         'type': 'geojson',

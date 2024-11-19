@@ -32,6 +32,8 @@ function loadBusStops() {
         // Store all bus stops in an array
         const busStops = [];
         
+        const userId = firebase.auth().currentUser.uid;
+        
         querySnapshot.forEach(doc => {
             const busStopData = doc.data();
             const stopId = doc.id;
@@ -50,6 +52,13 @@ function loadBusStops() {
         displayStars("stop1-stars", stop1.stars, stop1.stopId); // Pass stopId here
         displayAverageStars(stop1.stopId, "stop1-average"); // Displays average rating
 
+        // Fetch and display the user's rating for stop1
+        db.collection("bus_stops").doc(stop1.stopId).collection("ratings").doc(userId).get()
+        .then(doc => {
+            const userRating = doc.exists ? doc.data().stars : 0; // Default to 0 if no rating exists
+            displayStars("stop1-stars", userRating, stop1.stopId);
+        })
+        .catch(error => console.error("Error fetching user rating:", error));
 
         // Display the details for the second random bus stop
         const stop2 = randomBusStops[1];
@@ -59,6 +68,14 @@ function loadBusStops() {
         document.getElementById("south3").textContent = formatRouteNumber(stop2.number3);
         displayStars("stop2-stars", stop2.stars, stop2.stopId); // Pass stopId here
         displayAverageStars(stop2.stopId, "stop2-average"); // Displays average rating
+
+        // Fetch and display the user's rating for stop2
+        db.collection("bus_stops").doc(stop2.stopId).collection("ratings").doc(userId).get()
+        .then(doc => {
+            const userRating = doc.exists ? doc.data().stars : 0; // Default to 0 if no rating exists
+            displayStars("stop2-stars", userRating, stop2.stopId);
+        })
+        .catch(error => console.error("Error fetching user rating:", error));
 
     }).catch(error => {
         console.error("Error loading bus stops: ", error);
@@ -136,46 +153,49 @@ function initializePagePublic() {
 // we'll change this to only authenticated users when login process is properly set up.
 // Use either Option 1 or Option 2 initialization when the page loads
 document.addEventListener('DOMContentLoaded', initializePage); // For authenticated access only
-document.addEventListener('DOMContentLoaded', initializePagePublic); // For public access
 
 
-// Display the star rating (and options) in each bus stop
 // Display the star rating (and options) in each bus stop
 function displayStars(elementId, currentStarCount, busStopId) {
     const starContainer = document.getElementById(elementId);
-    starContainer.innerHTML = ""; // Clear any existing stars
-
-    const userId = firebase.auth().currentUser.uid;
-    db.collection("bus_stops").doc(busStopId).collection("ratings").doc(userId).get()
-        .then(doc => {
-            const userStarCount = doc.exists ? doc.data().starRating : 0; // Defaults to 0 if no rating
-
-            for (let i = 1; i <= 5; i++) {
-                const star = document.createElement("i");
-                star.classList.add("star", "fas", "fa-star");
-                star.classList.add("clickable");
-        
-                // Sets the star colour based on the rating
-                if (i <= currentStarCount) {
-                    star.classList.add("filled"); // Filled = yellow
-                } else {
-                    star.classList.add("unfilled"); // Unfilled = grey
-                }
-        
-                // Updates star rating when clicked
-                star.addEventListener("click", () => {
-                    updateStarRating(i, busStopId, elementId); 
-                });
-        
-                star.addEventListener("mouseout", () => displayStars(elementId, currentStarCount, busStopId));
-
-                starContainer.appendChild(star);
+    
+    // Check if the stars are already rendered
+    const stars = starContainer.querySelectorAll(".star");
+    if (stars.length > 0) {
+        // Update existing stars instead of clearing and re-rendering
+        stars.forEach((star, index) => {
+            if (index < currentStarCount) {
+                star.classList.add("filled");
+                star.classList.remove("unfilled");
+            } else {
+                star.classList.add("unfilled");
+                star.classList.remove("filled");
             }
-            })
-            .catch(error => {
-                console.error("Error fetching user star rating:", error)
-            });
+        });
+        return; // Skip re-rendering
+    }
+
+    // Render stars for the first time
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement("i");
+        star.classList.add("star", "fas", "fa-star", "clickable");
+
+        // Set the initial star color
+        if (i <= currentStarCount) {
+            star.classList.add("filled");
+        } else {
+            star.classList.add("unfilled");
         }
+
+        // Add event listeners for user interaction
+        star.addEventListener("click", () => updateStarRating(i, busStopId, elementId));
+
+        starContainer.appendChild(star);
+    }
+}
+
+
+
 
 // Update the star rating in Firestore and display the updated count
 function updateStarRating(newStarCount, busStopId, elementId) {
@@ -192,7 +212,7 @@ function updateStarRating(newStarCount, busStopId, elementId) {
         }).then(() => {
             console.log(`Rating updated to ${newStarCount} stars`);
             // Refresh the display to show updated stars
-            displayStars(elementId, busStopId);
+            displayStars(elementId, newStarCount, busStopId);
         }).catch(error => {
             console.error("Error updating rating:", error);
         });
