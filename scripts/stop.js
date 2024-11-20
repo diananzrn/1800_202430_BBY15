@@ -118,3 +118,4 @@ function getUserLocation(busStopLat, busStopLng) {
         document.getElementById('distanceValue').textContent = "Geolocation is not supported by this browser.";
     }
 }
+

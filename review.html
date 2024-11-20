@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+    <link rel="icon" type="image/x-icon" href="./images/Bus_Logo.jpg">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
+        <a class="navbar-brand" style="color: rgb(0, 87, 0); margin-left: 1%;" href="stop.html"><i class="fas fa-arrow-left"></i></a>
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: rgb(0, 87, 0);">EZTransit</a>
+            <div class="dropdown" style="padding-left: 4%;">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Explore
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="index.html">Main Page</a></li>
+                    <li><a class="dropdown-item" href="profile.html">Your Profile</a></li>
+                    <li><a class="dropdown-item" href="favorites.html">Favorites</a></li>
+                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!--stuff-->
+    <div class="container">
+        <br>
+        <h1>Review for <span id="name"> Stop Name</span></h1>
+        <br>
+        <form>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Add a title</label>
+                <input type="text" class="form-control" id="title" placeholder="Title">
+            </div><br>
+            <div class="form-group">
+                <div class="card-body">
+                    <p>Rate your overall experience:</p>
+                    <span class="material-icons star" id="star1">star_outline</span>
+                    <span class="material-icons star" id="star2">star_outline</span>
+                    <span class="material-icons star" id="star3">star_outline</span>
+                    <span class="material-icons star" id="star4">star_outline</span>
+                    <span class="material-icons star" id="star5">star_outline</span>
+                </div>
+                <label for="exampleFormControlSelect1">How crowded was the bus stop?</label>
+                <select class="form-control" id="level">
+                    <option>Very crowded</option>
+                    <option>Moderate</option>
+                    <option>Not crowded</option>
+                </select>
+                <br>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">How much was the waiting time for your bus?</label>
+                    <select class="form-control" id="waiting">
+                        <option>Less than 5 minutes</option>
+                        <option>5-10 minutes</option>
+                        <option>10-15 minutes</option>
+                        <option>More than 15 minutes</option>
+                    </select>
+                    <br>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">What did you think of the bus stop?</label>
+                    <textarea class="form-control" id="description" rows="3"></textarea>
+                </div>
+                <br>
+                <!-- Flooded -->
+                <label>Traffic <span style="display:inline-block; width: 26pt;"></span></label>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="traffic" value="Yes">
+                    <label>High</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="traffic" value="No">
+                    <label>Low</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="traffic" value="unSure" checked="">
+                    <label>Not sure</label>
+                </div>
+                <br>
+                <!-- Scramble -->
+                <label>Bus full <span style="display:inline-block; width: 20pt;"></span></label>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="full" value="Yes">
+                    <label>Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="full" value="No">
+                    <label>No</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="full" value="unSure" checked="">
+                    <label>Not sure</label>
+                </div>
+
+                <br>
+                <div class="d-flex">
+                    <button type="button" class="btn btn-lg btn-primary pull-right"
+                        onclick="writeReview()">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Load Firebase first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+
+    <!-- Then load your Firebase config -->
+    <script src="./scripts/firebaseAPI_TEAM15.js"></script>
+
+    <!-- Finally load your main script -->
+    <script src="./scripts/main.js"></script>
+    <script src="./scripts/review.js"></script>
+    <script src="./scripts/stop.js"></script>
+     <!--links to make the dropdown menu work-->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
+
+
+
+</body>
+
+</html>
