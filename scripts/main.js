@@ -3,17 +3,11 @@ function getNameFromAuth() {
         // Check if a user is signed in:
         if (user) {
             // Do something for the currently logged-in user here: 
-            console.log(user.uid); //print the uid in the browser console
-            console.log(user.displayName);  //print the user name in the browser console
+            console.log(user.uid); // print the uid in the browser console
+            console.log(user.displayName);  // print the username in the browser console
             userName = user.displayName;
 
-            //method #1:  insert with JS
-            //document.getElementById("name-goes-here").innerText = userName;    
-
-            //method #2:  insert using jquery
-            // $("#name-goes-here").text(userName); //using jquery
-
-            //method #3:  insert using querySelector
+            // insert using querySelector
             document.querySelector("#name-goes-here").innerText = userName
 
         } else {
@@ -159,42 +153,28 @@ document.addEventListener('DOMContentLoaded', initializePage); // For authentica
 function displayStars(elementId, currentStarCount, busStopId) {
     const starContainer = document.getElementById(elementId);
     
-    // Check if the stars are already rendered
+    // Ensures the stars are only printed once and not any more
     const stars = starContainer.querySelectorAll(".star");
     if (stars.length > 0) {
-        // Update existing stars instead of clearing and re-rendering
+        // Update existing stars
         stars.forEach((star, index) => {
-            if (index < currentStarCount) {
-                star.classList.add("filled");
-                star.classList.remove("unfilled");
-            } else {
-                star.classList.add("unfilled");
-                star.classList.remove("filled");
-            }
+            star.classList.toggle("filled", index < currentStarCount);
+            star.classList.toggle("unfilled", index >= currentStarCount);
         });
-        return; // Skip re-rendering
+        return;
     }
 
-    // Render stars for the first time
+    // Render the stars
     for (let i = 1; i <= 5; i++) {
         const star = document.createElement("i");
         star.classList.add("star", "fas", "fa-star", "clickable");
-
         // Set the initial star color
-        if (i <= currentStarCount) {
-            star.classList.add("filled");
-        } else {
-            star.classList.add("unfilled");
-        }
-
+        star.classList.add(i < currentStarCount ? "filled" : "unfilled");
         // Add event listeners for user interaction
         star.addEventListener("click", () => updateStarRating(i, busStopId, elementId));
-
         starContainer.appendChild(star);
     }
 }
-
-
 
 
 // Update the star rating in Firestore and display the updated count
@@ -249,9 +229,9 @@ function displayAverageStars(busStopId, elementId) {
                 userCount++;
             }
         });
-
+        // Calculates the average rating based on current ratings, 
+        // "No ratings" is printed if there aren't any ratings saved for that stop
         const averageRating = userCount > 0 ? (totalStars / userCount).toFixed(1) : "No ratings";
-        
         document.getElementById(elementId).textContent = averageRating;
     })
     .catch(error => {
