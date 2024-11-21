@@ -25,7 +25,6 @@
             <h2 class="mt-4">Your Favorite Stops</h2>
             <div id="favoritesList" class="list-group">
                 <!-- Favorite stops will be populated here -->
-                 <!-- could not get it to work with original design-->
             </div>
         </div>
     </main>
@@ -34,36 +33,65 @@
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
             <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
-          <a href="home.html" class="navbar-brand">
+            <a href="home.html" class="navbar-brand">
             <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
             <a href="favorites.html" class="navbar-brand">
                 <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
             </a>
         </div>
-      </footer>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <!-- Firebase configuration file -->
+    <script src="./scripts/firebaseAPI_TEAM15.js"></script>
 
     <script>
-        // Function to display favorite bus stops
+        // Function to display favorite bus stops from Firestore
         function displayFavorites() {
             const favoritesList = document.getElementById('favoritesList');
-            const favorites = JSON.parse(localStorage.getItem('favorites')) || {};
 
-            // Clear the existing list
-            favoritesList.innerHTML = '';
+            // Ensure the user is authenticated
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    const userId = user.uid;
 
-            // Loop through favorites and create list items
-            for (const stopId in favorites) {
-                if (favorites.hasOwnProperty(stopId)) {
-                    const title = favorites[stopId];
+                    // Query the user's favorite stops from Firestore
+                    const favoritesRef = firebase.firestore().collection('users').doc(userId).collection('favorites');
+                    favoritesRef.get().then(snapshot => {
+                        // Clear the existing list
+                        favoritesList.innerHTML = '';
 
-                    // Create a new list item
-                    const listItem = document.createElement('a');
-                    listItem.className = 'list-group-item list-group-item-action';
-                    listItem.textContent = title;
-                    listItem.href = `route.html?stopId=${stopId}`; // Link to route page with stop ID (still have to create it in the future)
-                    favoritesList.appendChild(listItem);
+                        // Loop through the Firestore results and create list items
+                        snapshot.forEach(doc => {
+                            const stopData = doc.data();
+                            const stopId = doc.id;
+                            const title = stopData.title;
+
+                            // Create a new list item for each favorite stop
+                            const listItem = document.createElement('a');
+                            listItem.className = 'list-group-item list-group-item-action';
+                            listItem.textContent = title;
+                            listItem.href = `route.html?stopId=${stopId}`; // Link to route page with stop ID
+
+                            // Add bookmark icon with current state
+                            const bookmarkIcon = document.createElement('i');
+                            bookmarkIcon.classList.add('fas', 'fa-bookmark');
+                            listItem.prepend(bookmarkIcon);
+
+                            favoritesList.appendChild(listItem);
+                        });
+                    }).catch(error => {
+                        console.error("Error fetching favorites: ", error);
+                    });
+                } else {
+                    // Handle case where user is not logged in
+                    console.log("User not logged in");
                 }
-            }
+            });
         }
 
         // Call displayFavorites on DOMContentLoaded

@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid">
             <a class="navbar-brand" style="color: rgb(0, 87, 0);">EZTransit</a>
@@ -23,7 +24,6 @@
                     data-bs-toggle="dropdown" aria-expanded="false">
                     Explore
                 </a>
-
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li><a class="dropdown-item" href="index.html">Main Page</a></li>
                     <li><a class="dropdown-item" href="profile.html">Your Profile</a></li>
@@ -31,11 +31,10 @@
                     <li><a class="dropdown-item" href="#">Logout</a></li>
                 </ul>
             </div>
-
         </div>
-
     </nav>
 
+    <!-- Main Content -->
     <main>
         <div class="main-container" style="padding-bottom:10%;">
             <div class="container-fluid">
@@ -44,25 +43,21 @@
                     <div id="map" style="width:100%;height:400px;"></div>
                 </div>
             </div>
+
+            <!-- Bus Stop List -->
             <div id="bus-stop-list">
+                <!-- Stop 1 Card -->
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
                         <a href="stop.html">
                             <h5 class="card-title" id="stop1" onclick="storeStopName(this)" data-id="stop1"></h5>
                         </a>
                         <div class="routes">
-
                             <span class="route-number" id="NB1"></span>
-                            <!-- The latitude  -->
                             <span class="route-number" id="NB2"></span>
-                            <!-- The longitude  -->
                             <span class="route-number" id="NB3"></span>
                         </div>
-
-                        <!-- stop 1 clickable stars -->
                         <div class="star-rating" id="stop1-stars"></div>
-
-                        <!-- stop 1 average star rating -->
                         <div class="average-stars">
                             Average Rating: <span id="stop1-average">0</span> / 5
                         </div>
@@ -71,6 +66,7 @@
                     </div>
                 </div>
 
+                <!-- Stop 2 Card -->
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
                         <a href="stop.html">
@@ -78,128 +74,127 @@
                         </a>
                         <div class="routes">
                             <span class="route-number" id="south1"></span>
-                            <!-- The latitude  -->
                             <span class="route-number" id="south2"></span>
-                            <!-- The longitude  -->
                             <span class="route-number" id="south3"></span>
                         </div>
-
-                        <!-- stop 2 clickable stars -->
                         <div class="star-rating" id="stop2-stars"></div>
-
-                        <!-- stop 2 average star rating -->
                         <div class="average-stars">
                             Average Rating: <span id="stop2-average">0</span> / 5
                         </div>
                         <i class="far fa-bookmark" data-stop-id="stop2" style="float: right; scale: 2;"></i>
                         <a class="btn" style="margin-top: 3%; border-radius: 2rem;">Go to stop</a>
                     </div>
-
                 </div>
-
             </div>
         </div>
-
-
-
     </main>
 
+    <!-- Footer -->
     <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
-                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
+                <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            </a>
             <a href="home.html" class="navbar-brand">
-                <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>
+                <i class="fas fa-home" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
+            </a>
             <a href="favorites.html" class="navbar-brand">
                 <i class="far fa-bookmark" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
             </a>
         </div>
     </footer>
 
-    <!-- Load Firebase first -->
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-
-    <!-- Then load your Firebase config -->
+    <!-- Firebase Config -->
     <script src="./scripts/firebaseAPI_TEAM15.js"></script>
 
-    <!-- Finally load your main script -->
-    <script src="./scripts/main.js"></script>
+    <!-- Main JS Scripts -->
     <script src="./scripts/map.js"></script>
+    <script src="./scripts/main.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Retrieve favorites from localStorage
-            let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+            // Ensure the user is authenticated
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    const userId = user.uid;
+                    handleFavorites(userId);
+                }
+            });
+        });
 
-            // Update bookmark icons based on favorites
+        function handleFavorites(userId) {
             document.querySelectorAll('.fa-bookmark').forEach(bookmark => {
                 const stopId = bookmark.getAttribute('data-stop-id');
-
-                // Check if the stop is in favorites and update the icon accordingly
-                if (favorites[stopId]) {
-                    bookmark.classList.add('fas'); // Light up the bookmark icon
-                    bookmark.classList.remove('far'); // Remove the outline class
-                } else {
-                    bookmark.classList.remove('fas'); // Ensure the icon is not lit
-                    bookmark.classList.add('far'); // Add the outline class
-                }
+                
+                // Check if the stop is already in the user's Firestore favorites
+                const stopRef = db.collection('users').doc(userId).collection('favorites').doc(stopId);
+                
+                stopRef.get().then(doc => {
+                    if (doc.exists) {
+                        // Mark it as filled if it exists
+                        bookmark.classList.add('fas');
+                        bookmark.classList.remove('far');
+                    } else {
+                        // Mark it as empty if it doesn't exist
+                        bookmark.classList.remove('fas');
+                        bookmark.classList.add('far');
+                    }
+                });
 
                 // Add event listener for bookmark clicks
-                bookmark.addEventListener('click', () => {
+                bookmark.onclick = function() {
                     const isFavorite = bookmark.classList.toggle('fas'); // Toggle between filled and outlined
-                    bookmark.classList.toggle('far');
-
+                    bookmark.classList.toggle('far'); // Toggle between outlined and filled
+                    
                     const titleElement = document.querySelector(`#${stopId}`);
                     const title = titleElement ? titleElement.textContent : '';
 
                     if (isFavorite) {
-                        addToFavorites(stopId, title);
+                        addToFavorites(userId, stopId, title);
                     } else {
-                        removeFromFavorites(stopId, title);
+                        removeFromFavorites(userId, stopId);
                     }
-                });
+                };
             });
-        });
-
-        function addToFavorites(stopId, title) {
-            let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
-            favorites[stopId] = title;
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            console.log(`Added to favorites: ${title}`);
         }
 
-        function removeFromFavorites(stopId, title) {
-            let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
-            delete favorites[stopId];
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            console.log(`Removed from favorites: ${stopId}`);
+        function addToFavorites(userId, stopId, title) {
+            const stopRef = db.collection('users').doc(userId).collection('favorites').doc(stopId);
+            stopRef.set({
+                title: title,
+                stopId: stopId
+            })
+            .then(() => {
+                console.log(`Added ${title} to favorites`);
+            })
+            .catch(error => {
+                console.error("Error adding favorite:", error);
+            });
         }
 
+        function removeFromFavorites(userId, stopId) {
+            const stopRef = db.collection('users').doc(userId).collection('favorites').doc(stopId);
+            stopRef.delete()
+            .then(() => {
+                console.log(`Removed ${stopId} from favorites`);
+            })
+            .catch(error => {
+                console.error("Error removing favorite:", error);
+            });
+        }
 
-
-
-        // Function to store the stop name in localStorage
         // Function to store the stop name dynamically
         function storeStopName(stopElement) {
             const stopName = stopElement.textContent || stopElement.innerText;  // Get the name of the stop
-            localStorage.setItem('busStopName', stopName);  // Store it in localStorage
-            window.location.href = 'stop.html';  // Redirect to the stop details page
+            localStorage.setItem("stopName", stopName);  // Store the name in localStorage
         }
-
-
     </script>
-
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD24YXLE6KvxKaX-iEcaDOIR0Dljq9esYs&callback=initMap&libraries=places"></script>
-    <!--links to make the dropdown menu work-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-
-
-
 </body>
 
 </html>
