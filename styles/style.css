@@ -76,3 +76,37 @@ body {
     font-weight: bold;
 }
 
+/* Styles for all of the predefined search bar suggestions */
+/* Ensure the search input field doesn't interfere with the layout */
+form.d-flex {
+    position: relative;
+}
+
+/* Remove border and outline for the search input */
+input[type="search"] {
+    border: none;
+    outline: none;
+}
+
+/* Suggestions container styling */
+/* Make sure the search input field has space for suggestions */
+#suggestions {
+    position: absolute;
+    top: 100%; /* Position below the input */
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    display: none; /* Initially hidden */
+    z-index: 9999; /* Ensure it appears above other elements */
+}
+
+/* Suggestions item hover effect */
+.autocomplete-suggestion:hover {
+    background-color: #f8f9fa;
+}
+
+
