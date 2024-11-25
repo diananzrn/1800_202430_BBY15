@@ -11,7 +11,7 @@ stars.forEach((star, index) => {
         // Fill in clicked star and stars before it
         for (let i = 0; i <= index; i++) {
             // Change the text content of stars to 'star' (filled)
-            document.getElementById(`star${i + 1}`).textContent = 'star';
+            document.getElementById(`star${i + 1}`).innerHTML = '<i class="fas fa-star"></i>';
         }
     });
 });
@@ -33,7 +33,7 @@ function writeReview() {
 		// Iterate through each element in the 'stars' NodeList using the forEach method
     stars.forEach((star) => {
 				// Check if the text content of the current 'star' element is equal to the string 'star'
-        if (star.textContent === 'star') {
+        if (star.innerHTML === '<i class="fas fa-star"></i>') {
 						// If the condition is met, increment the 'hikeRating' by 1
             stopRating++;
         }

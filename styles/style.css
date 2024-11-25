@@ -110,3 +110,11 @@ input[type="search"] {
 }
 
 
+.review-card {
+    margin: 2%;
+    background-color:#fffff8;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
