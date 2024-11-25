@@ -46,6 +46,7 @@
 
             <!-- Bus Stop List -->
             <div id="bus-stop-list">
+
                 <!-- Stop 1 Card -->
                 <div class="card" style="margin-top: 1%;">
                     <div class="card-body">
@@ -62,7 +63,7 @@
                             Average Rating: <span id="stop1-average">0</span> / 5
                         </div>
                         <i class="far fa-bookmark" data-stop-id="stop1" style="float: right; scale: 2;"></i>
-                        <a onclick="storeStopName(this)" class="btn" style="margin-top: 3%; border-radius: 2rem;">Go to stop</a>
+                        <a  class="btn" style="margin-top: 3%; border-radius: 2rem;">Go to stop</a>
                     </div>
                 </div>
 
@@ -92,7 +93,7 @@
     <!-- Footer -->
     <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
-            <a href="login.html" class="navbar-brand">
+            <a href="profile.html" class="navbar-brand">
                 <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i>
             </a>
             <a href="home.html" class="navbar-brand">
@@ -116,6 +117,7 @@
     <!-- Main JS Scripts -->
     <script src="./scripts/map.js"></script>
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/stop.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -189,12 +191,12 @@
             });
         }
 
-        // Function to store the stop name dynamically
-        function storeStopName(stopElement) {
-            const stopName = stopElement.textContent || stopElement.innerText;  // Get the name of the stop
-            localStorage.setItem("stopName", stopName);  // Store the name in localStorage
-        }
+       
+
+         
+
     </script>
+    
 </body>
 
 </html>

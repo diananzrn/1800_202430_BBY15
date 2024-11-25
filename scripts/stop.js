@@ -1,3 +1,42 @@
+function storeStopName(stopElement, source) {
+    const stopName = stopElement.textContent.trim();
+    console.log("Clicked element text:", stopElement.textContent);
+    console.log("Source passed to storeStopName:", source);
+
+    if (stopName) {
+        console.log("Valid stop name captured:", stopName);
+
+        // Store the bus stop name and source in localStorage
+        localStorage.setItem('busStopName', stopName);
+        localStorage.setItem('stopSource', source);
+        console.log("Stored in localStorage - busStopName:", stopName);
+        console.log("Stored in localStorage - stopSource:", source);
+
+        // Update the search input field with the selected stop name
+        const searchInput = document.getElementById('suggestions');
+        searchInput.value = stopName;
+
+        setTimeout(function () {
+            console.log("Redirecting to stop.html...");
+            window.location.href = 'stop.html';
+        }, 100);
+    } else {
+        console.error("Invalid stop name captured.");
+    }
+}
+
+function storeStopFromSearch() {
+    const searchInput = document.getElementById('suggestions');
+    const stopName = searchInput.value.trim();
+    
+    if (stopName) {
+        console.log("Stop name from search input:", stopName);
+
+        // Store the bus stop name from search in localStorage
+        localStorage.setItem('busStopName', stopName);
+        localStorage.setItem('stopSource', 'search');
+        console.log("Stored in localStorage - busStopName:", stopName);
+        console.log("Stored in localStorage - stopSource: search");
 // Function to store the stop name dynamically
 function storeStopName(stopElement) {
     // Extract the bus stop name from the clicked element
@@ -5,57 +44,77 @@ function storeStopName(stopElement) {
 
     // Store the stop name in localStorage
     localStorage.setItem('stopName', stopName);
-
-    // Redirect to the stop.html page
-    window.location.href = 'stop.html';
 }
-
-// Function to retrieve the stop name and display it on stop.html
-function displayStopName() {
-    // Retrieve the bus stop name from localStorage
-    const stopName = localStorage.getItem('stopName');
-
-    // Display the stop name in the "name" element on the stop.html page
-    if (stopName) {
-        document.getElementById('name').textContent = stopName;
+        setTimeout(function () {
+            console.log("Redirecting to stop.html...");
+            window.location.href = 'stop.html';
+        }, 100);
     } else {
-        document.getElementById('name').textContent = "No bus stop selected";  // Fallback if no stop is selected
+        console.error("Invalid stop name captured from search.");
     }
 }
 
-// Run displayStopName when the stop.html page loads to show the stored stop name
-window.onload = displayStopName;
+function displayStopName() {
+    // Retrieve the bus stop name from localStorage
+    const busStopName = localStorage.getItem('stopName');
+    const stopSource = localStorage.getItem('stopSource');
+
+    console.log("Retrieved from localStorage - Stop Name:", busStopName);
+    console.log("Source retrieved from localStorage:", stopSource);
+
+    if (stopName) {
+        console.log("Valid stop name captured:", stopName);
+
+        // Store the bus stop name and source in localStorage
+        localStorage.setItem('busStopName', stopName);
+        localStorage.setItem('stopSource', source);
+        console.log("Stored in localStorage - busStopName:", stopName);
+        console.log("Stored in localStorage - stopSource:", source);
+
+        // Update the search input field with the selected stop name
+        const searchInput = document.getElementById('suggestions');
+        searchInput.value = stopName;
+
+        setTimeout(function () {
+            console.log("Redirecting to stop.html...");
+            window.location.href = 'stop.html';
+        }, 100);
+    } else {
+        document.getElementById('name').textContent = "No bus stop selected";
+    }
+}
+
+window.onload = function() {
+    displayStopName();  // Run displayStopName when stop.html is loaded
+    console.log("Window loaded and displayStopName is called.");
+}
 
 // Get the bus stop name from localStorage
 const busStopName = localStorage.getItem('stopName');
+console.log("Bus stop name retrieved from localStorage:", busStopName);
 
 if (busStopName) {
-    // Query Firestore for the bus stop details using the bus stop name
-    db.collection('stops') // 'stops' is your collection name in Firestore
-        .where('name', '==', busStopName) // Ensure this matches the bus stop name
+    db.collection('stops')  // Firestore query
+        .where('name', '==', busStopName)
         .get()
         .then((querySnapshot) => {
+            console.log("Firestore querySnapshot retrieved:", querySnapshot.size);
+
             if (querySnapshot.empty) {
-                // Handle case where no bus stop is found
+                console.log("Bus stop not found.");
                 document.getElementById('name').textContent = 'Bus stop not found';
                 document.getElementById('Longitude').textContent = 'Longitude: N/A';
                 document.getElementById('Latitude').textContent = 'Latitude: N/A';
             } else {
                 querySnapshot.forEach((doc) => {
-                    // Get the bus stop data from Firestore
                     const busStopData = doc.data();
                     const lat = busStopData.lat;
                     const lng = busStopData.lng;
-
-                    // Set the bus stop details in the HTML
+                    console.log("Bus stop data:", busStopData);
                     document.getElementById('name').textContent = busStopName;
                     document.getElementById('Longitude').textContent = `Longitude: ${lng}`;
                     document.getElementById('Latitude').textContent = `Latitude: ${lat}`;
-
-                    // Initialize the map with the bus stop location
                     initMap(lat, lng);
-
-                    // Call getUserLocation to calculate and display distance
                     getUserLocation(lat, lng);
                 });
             }
@@ -64,7 +123,7 @@ if (busStopName) {
             console.error('Error getting documents: ', error);
         });
 } else {
-    // Handle case if bus stop name is not available
+    console.log("No bus stop name found in localStorage.");
     document.getElementById('name').textContent = 'No bus stop selected';
     document.getElementById('Longitude').textContent = 'Longitude: N/A';
     document.getElementById('Latitude').textContent = 'Latitude: N/A';
@@ -72,6 +131,7 @@ if (busStopName) {
 
 // Map initialization function to display the bus stop's location
 function initMap(lat, lng) {
+    console.log("Initializing map with coordinates:", lat, lng);
     const map = new google.maps.Map(document.getElementById('map'), {
         zoom: 14,
         center: { lat: parseFloat(lat), lng: parseFloat(lng) }
@@ -89,28 +149,25 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = 
-        0.5 - Math.cos(dLat) / 2 + 
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    const a =
+        0.5 - Math.cos(dLat) / 2 +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
         (1 - Math.cos(dLng)) / 2;
-    const distance = R * 2 * Math.asin(Math.sqrt(a)); // Distance in km
+    const distance = R * 2 * Math.asin(Math.sqrt(a));  // Distance in km
+    console.log("Calculated distance:", distance, "km");
     return distance;
 }
 
 // Function to get the user's current location and calculate distance
 function getUserLocation(busStopLat, busStopLng) {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
             console.log("User Location: ", userLat, userLng);
-
-            // Calculate distance
             const distance = calculateDistance(userLat, userLng, busStopLat, busStopLng);
-
-            // Display the distance on the webpage
             document.getElementById('distanceValue').textContent = `${distance.toFixed(2)} km`;
-        }, function(error) {
+        }, function (error) {
             console.error("Error getting user location: ", error);
             document.getElementById('distanceValue').textContent = 'Unable to retrieve your location.';
         });
@@ -118,6 +175,7 @@ function getUserLocation(busStopLat, busStopLng) {
         document.getElementById('distanceValue').textContent = "Geolocation is not supported by this browser.";
     }
 }
+
 
 function saveStopDocumentIDAndRedirect(){
     window.location.href = 'review.html';
@@ -183,37 +241,3 @@ function populateReviews() {
 }
 
 populateReviews();
-
-function displayUserName() {
-db.collection("users")
-  .doc(userId)
-  .get()
-  .then((doc) => {
-    if (doc.exists) {
-      let ID = '/users/' + doc; // Get the user ID with the desired format
-      let userName = doc.data().name; // Extract the user's name
-
-      // Query the reviews collection for matching userID
-      db.collection("reviews")
-        .where("userID", "==", ID)
-        .get()
-        .then((reviewSnapshot) => {
-          if (!reviewSnapshot.empty) {
-            // If a matching review exists, update the user name in the DOM
-            document.getElementById("user-name").innerHTML = userName;
-          } else {
-            console.log("No reviews found for this user.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching reviews:", error);
-        });
-    } else {
-      console.log("No user found with this ID.");
-    }
-  })
-  .catch((error) => {
-    console.error("Error fetching user:", error);
-  });
-}
-displayUserName();
