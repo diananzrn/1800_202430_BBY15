@@ -199,6 +199,7 @@ function populateReviews() {
             console.log(reviews);
             reviews.forEach((doc) => {
                 var title = doc.data().title;
+                var name = doc.data().userName;
                 var level = doc.data().crowdLevel;
                 var description = doc.data().description;
                 var traffic = doc.data().traffic;
@@ -212,6 +213,7 @@ function populateReviews() {
 
                 let reviewCard = hikeCardTemplate.content.cloneNode(true);
                 reviewCard.querySelector(".title").innerHTML = title;
+                reviewCard.querySelector(".user").innerHTML = name;
                 reviewCard.querySelector(".time").innerHTML = new Date(
                     time
                 ).toLocaleString();

@@ -16,6 +16,8 @@ stars.forEach((star, index) => {
     });
 });
 
+
+
 function writeReview() {
     console.log("inside write review");
     let stopTitle = document.getElementById("title").value;
@@ -46,11 +48,11 @@ function writeReview() {
         var currentUser = db.collection("users").doc(user.uid);
         var userID = currentUser;
         
-  
         // Get the document for the current user.
         db.collection("reviews").add({
             stopName: stopName,
             userID: userID,
+            userName: user.displayName,
             title: stopTitle,
             crowdLevel: crowdLevel,
             waiting: stopWait,
