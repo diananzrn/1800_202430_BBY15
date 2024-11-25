@@ -38,7 +38,8 @@
             <h1 style="padding-bottom:5%">User Profile</h1>
 
             <!-- Editable info fieldset for User's name, Fav bus, and City -->
-            <form>                    
+            <form>    
+                <fieldset class="mb-3" id="personalInfoFields" disabled>                
                     <div class="form-group" style="padding-bottom:10px">
                         <label >Name</label>
                         <input type="text" id="nameInput" class="form-control" placeholder="Enter your name">
@@ -55,11 +56,11 @@
 
                 <!-- Clickable buttons to edit and/or save changes to the fieldset above, and logout button -->
                 <div class="d-flex justify-content-end mt-5">
-                    <button type="button" class="btn btn-other" style="width:30%" onclick="logout()">Log Out</button>
+                    <button type="button" class="btn btn-other" style="width:50%; height:50%" onclick="logout()">Log Out</button>
                     <span style="width: 100%"></span>
-                    <button type="button" class="btn btn-secondary" style="width:20%" onclick="editUserInfo()">Edit</button>
-                    <span style="width: 10px"></span>
-                    <button type="button" class="btn btn-info" style="width:20%" onclick="saveUserInfo()">Save</button>
+                    <button type="button" id=editButton class="btn btn-secondary" style="width:25%; height:50%" onclick="editUserInfo()">Edit</button>
+                    <span id=editSeparator style="width: 10px; display:none"></span>
+                    <button type="button" id=saveButton class="btn btn-info" style="width:25%; height:50%; display:none" onclick="saveUserInfo()">Save</button>
                     
                 </div>
             </form>
@@ -86,7 +87,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="./scripts/firebaseAPI_TEAM15.js"></script>
     <script src="./scripts/profile.js"></script>
-    <script src = "./scripts/search.js"></script>
+    <script src="./scripts/search.js"></script>
     
 </body>
 

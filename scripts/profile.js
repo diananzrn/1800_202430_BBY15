@@ -35,9 +35,14 @@ function populateUserInfo() {
 populateUserInfo();
 
 function editUserInfo() {
-    //Enable the form fields
+    // Enable the form fields
     console.log ("editUserInfo enabled");
     document.getElementById('personalInfoFields').disabled = false;
+    const editButton = document.getElementById("editButton");
+    const saveButton = document.getElementById("saveButton");
+    editButton.style.display = "none"; // Hides the button
+    saveButton.style.display = "inline-block";
+
  }
 
  function saveUserInfo() {
@@ -46,7 +51,16 @@ function editUserInfo() {
         userName = document.getElementById('nameInput').value;       // get the value of the field with id="nameInput"
         userFavoriteBus = document.getElementById('favoriteBusInput').value;     // get the value of the field with id="favoriteBusInput"
         userCity = document.getElementById('cityInput').value;       // get the value of the field with id="cityInput"
-        
+        const editButton = document.getElementById("editButton");
+        const saveButton = document.getElementById("saveButton");
+        const editSeparator = document.getElementById("editSeparator");
+        saveButton.style.display = "none"; 
+        editSeparator.style.display = "none";
+        editButton.style.display = "inline-block";
+
+
+
+
         // update user's document in Firestore
         currentUser.update({
             name: userName,
