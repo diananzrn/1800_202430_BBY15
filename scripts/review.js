@@ -1,17 +1,4 @@
-var stopDocID = localStorage.getItem("stopDocID");    //visible to all functions on this page
-
-function getstopName(id) {
-    db.collection("stops")
-      .doc(id)
-      .get()
-      .then((thisStop) => {
-        var stopName = thisStop.data().name;
-        document.getElementById("stopName").innerHTML = stopName;
-          });
-}
-
-getstopName(stopName);
-
+const stopName = localStorage.getItem('stopName');
 // Add this JavaScript code to make stars clickable
 
 // Select all elements with the class name "star" and store them in the "stars" variable
@@ -57,8 +44,9 @@ function writeReview() {
     var user = firebase.auth().currentUser;
     if (user) {
         var currentUser = db.collection("users").doc(user.uid);
-        var userID = user.uid;
-
+        var userID = currentUser;
+        
+  
         // Get the document for the current user.
         db.collection("reviews").add({
             stopName: stopName,
@@ -79,3 +67,4 @@ function writeReview() {
         window.location.href = 'review.html';
     }
 }
+

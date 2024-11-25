@@ -37,6 +37,11 @@
     #traffic {
         padding: 10px;
     }
+
+    #footer {
+        display: block;
+        position: sticky;
+    }
 </style>
 
 
@@ -85,15 +90,42 @@
             
             <h3 id="userDistance">Distance to stop: <span id="distanceValue">Calculating...</span></h3>
 
+            <!--Populated reviews-->
+<div class="container">
+    <h2>Reviews:</h2>
+    <div id="details-go-here"></div>
+    <!-- Here is the container for cards with horizontal scrolling -->
+    <div class="card-container">
+        <div id="reviewCardGroup" class="row row-cols-auto">
+            <!-- Add your card templates here -->
+        </div>
+    </div>
+</div>
 
+<template id="reviewCardTemplate">
+    <div class="card bg-secondary">
+        <img class="card-img-top">
+        <div class="card-body bg-light">
+            <h5 class="title">placeholder</h5>
+            <p id="user-name" class="user">placeholder</p>
+            <p class="star-rating"></p>
+            <p class="time">placeholder</p>
+            <p class="waiting">placeholder</p>
+            <p class="level">placeholder</p>
+            <p class="full">placeholder</p>
+            <p class="traffic">placeholder</p>
+            <br>
+            <p class="description">This card has supporting text below as a natural lead-in to additional content.</p>
+        </div>
+    </div>
+</template>
 
             <div class="text-center mt-3">
-                <button class="btn btn-success" onclick="window.location.href='review.html'"
+                <button class="btn btn-success" onclick="saveStopDocumentIDAndRedirect()"
                     style="background-color: rgb(13, 173, 13); border-color: rgb(0, 87, 0);">
                     <i class="fas fa-comment-alt"></i> Leave a Review
                 </button>
             </div>
-
 
             </div>
     </main>
@@ -101,7 +133,7 @@
 
 
 
-    <footer class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
+    <footer id="footer" class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: rgb(13, 173, 13);">
         <div class="container-fluid justify-content-around">
             <a href="login.html" class="navbar-brand">
                 <i class="fas fa-user-circle" style="color: rgb(0, 87, 0); scale: 1.8;"></i></a>

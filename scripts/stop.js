@@ -4,7 +4,7 @@ function storeStopName(stopElement) {
     const stopName = stopElement.textContent || stopElement.innerText;
 
     // Store the stop name in localStorage
-    localStorage.setItem('busStopName', stopName);
+    localStorage.setItem('stopName', stopName);
 
     // Redirect to the stop.html page
     window.location.href = 'stop.html';
@@ -13,7 +13,7 @@ function storeStopName(stopElement) {
 // Function to retrieve the stop name and display it on stop.html
 function displayStopName() {
     // Retrieve the bus stop name from localStorage
-    const stopName = localStorage.getItem('busStopName');
+    const stopName = localStorage.getItem('stopName');
 
     // Display the stop name in the "name" element on the stop.html page
     if (stopName) {
@@ -27,7 +27,7 @@ function displayStopName() {
 window.onload = displayStopName;
 
 // Get the bus stop name from localStorage
-const busStopName = localStorage.getItem('busStopName');
+const busStopName = localStorage.getItem('stopName');
 
 if (busStopName) {
     // Query Firestore for the bus stop details using the bus stop name
@@ -119,3 +119,101 @@ function getUserLocation(busStopLat, busStopLng) {
     }
 }
 
+function saveStopDocumentIDAndRedirect(){
+    window.location.href = 'review.html';
+}
+
+// displays reviews
+function populateReviews() {
+    let hikeCardTemplate = document.getElementById("reviewCardTemplate");
+    let hikeCardGroup = document.getElementById("reviewCardGroup");
+
+    
+    const busStopName = localStorage.getItem('stopName');
+
+
+    // Double-check: is your collection called "Reviews" or "reviews"?
+    db.collection("reviews")
+        .where('stopName', '==', busStopName)
+        .get()
+        .then((allReviews) => {
+            reviews = allReviews.docs;
+            console.log(reviews);
+            reviews.forEach((doc) => {
+                var title = doc.data().title;
+                var level = doc.data().crowdLevel;
+                var description = doc.data().description;
+                var traffic = doc.data().traffic;
+                var full = doc.data().full;
+                var waiting = doc.data().waiting;
+                var time = doc.data().timestamp.toDate();
+                var rating = doc.data().rating; // Get the rating value
+                console.log(rating)
+
+                console.log(time);
+
+                let reviewCard = hikeCardTemplate.content.cloneNode(true);
+                reviewCard.querySelector(".title").innerHTML = title;
+                reviewCard.querySelector(".time").innerHTML = new Date(
+                    time
+                ).toLocaleString();
+                reviewCard.querySelector(".level").innerHTML = `Crowd evel: ${level}`;
+                reviewCard.querySelector(".waiting").innerHTML = `Waiting Period: ${waiting}`;
+                reviewCard.querySelector(".full").innerHTML = `Bus full: ${full}`;
+                reviewCard.querySelector(".traffic").innerHTML = `Traffic: ${traffic}`;
+                reviewCard.querySelector( ".description").innerHTML = `Description: ${description}`;
+
+                // Populate the star rating based on the rating value
+                
+	              // Initialize an empty string to store the star rating HTML
+								let starRating = "";
+								// This loop runs from i=0 to i<rating, where 'rating' is a variable holding the rating value.
+                for (let i = 0; i < rating; i++) {
+                    starRating += '<span class="material-icons">star</span>';
+                }
+								// After the first loop, this second loop runs from i=rating to i<5.
+                for (let i = rating; i < 5; i++) {
+                    starRating += '<span class="material-icons">star_outline</span>';
+                }
+                reviewCard.querySelector(".star-rating").innerHTML = starRating;
+
+                hikeCardGroup.appendChild(reviewCard);
+            });
+        });
+}
+
+populateReviews();
+
+function displayUserName() {
+db.collection("users")
+  .doc(userId)
+  .get()
+  .then((doc) => {
+    if (doc.exists) {
+      let ID = '/users/' + doc; // Get the user ID with the desired format
+      let userName = doc.data().name; // Extract the user's name
+
+      // Query the reviews collection for matching userID
+      db.collection("reviews")
+        .where("userID", "==", ID)
+        .get()
+        .then((reviewSnapshot) => {
+          if (!reviewSnapshot.empty) {
+            // If a matching review exists, update the user name in the DOM
+            document.getElementById("user-name").innerHTML = userName;
+          } else {
+            console.log("No reviews found for this user.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching reviews:", error);
+        });
+    } else {
+      console.log("No user found with this ID.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching user:", error);
+  });
+}
+displayUserName();
