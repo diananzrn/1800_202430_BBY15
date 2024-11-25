@@ -12,63 +12,79 @@ function storeStopName(stopElement) {
 
 // Function to retrieve the stop name and display it on stop.html
 function displayStopName() {
-    // Retrieve the bus stop name from localStorage
-    const stopName = localStorage.getItem('busStopName');
+    const stopName = getStopNameFromLocalStorage();
+    updateStopNameInPage(stopName);
+}
 
-    // Display the stop name in the "name" element on the stop.html page
+function getStopNameFromLocalStorage() {
+    return localStorage.getItem('busStopName');
+}
+
+function updateStopNameInPage(stopName) {
+    const stopNameElement = document.getElementById('name');
     if (stopName) {
-        document.getElementById('name').textContent = stopName;
+        stopNameElement.textContent = stopName;
     } else {
-        document.getElementById('name').textContent = "No bus stop selected";  // Fallback if no stop is selected
+        stopNameElement.textContent = "No bus stop selected";  // Fallback if no stop is selected
     }
 }
 
-// Run displayStopName when the stop.html page loads to show the stored stop name
-window.onload = displayStopName;
+function getBusStopDetailsFromFirestore(stopName) {
+    return db.collection('stops') // 'stops' is your collection name in Firestore
+        .where('name', '==', stopName) // Ensure this matches the bus stop name
+        .get();
+}
 
-// Get the bus stop name from localStorage
-const busStopName = localStorage.getItem('busStopName');
+function handleNoBusStopFound() {
+    document.getElementById('name').textContent = 'Bus stop not found';
+    document.getElementById('Longitude').textContent = 'Longitude: N/A';
+    document.getElementById('Latitude').textContent = 'Latitude: N/A';
+}
 
-if (busStopName) {
-    // Query Firestore for the bus stop details using the bus stop name
-    db.collection('stops') // 'stops' is your collection name in Firestore
-        .where('name', '==', busStopName) // Ensure this matches the bus stop name
-        .get()
+function handleBusStopFound(busStopData) {
+    const lat = busStopData.lat;
+    const lng = busStopData.lng;
+
+    document.getElementById('Longitude').textContent = `Longitude: ${lng}`;
+    document.getElementById('Latitude').textContent = `Latitude: ${lat}`;
+
+    // Initialize the map with the bus stop location
+    initMap(lat, lng);
+
+    // Call getUserLocation to calculate and display distance
+    getUserLocation(lat, lng);
+}
+
+function fetchBusStopDetails(busStopName) {
+    if (!busStopName) {
+        handleNoBusStopFound();
+        return;
+    }
+
+    getBusStopDetailsFromFirestore(busStopName)
         .then((querySnapshot) => {
             if (querySnapshot.empty) {
-                // Handle case where no bus stop is found
-                document.getElementById('name').textContent = 'Bus stop not found';
-                document.getElementById('Longitude').textContent = 'Longitude: N/A';
-                document.getElementById('Latitude').textContent = 'Latitude: N/A';
+                handleNoBusStopFound();
             } else {
                 querySnapshot.forEach((doc) => {
-                    // Get the bus stop data from Firestore
                     const busStopData = doc.data();
-                    const lat = busStopData.lat;
-                    const lng = busStopData.lng;
-
-                    // Set the bus stop details in the HTML
-                    document.getElementById('name').textContent = busStopName;
-                    document.getElementById('Longitude').textContent = `Longitude: ${lng}`;
-                    document.getElementById('Latitude').textContent = `Latitude: ${lat}`;
-
-                    // Initialize the map with the bus stop location
-                    initMap(lat, lng);
-
-                    // Call getUserLocation to calculate and display distance
-                    getUserLocation(lat, lng);
+                    handleBusStopFound(busStopData);
                 });
             }
         })
         .catch((error) => {
             console.error('Error getting documents: ', error);
         });
-} else {
-    // Handle case if bus stop name is not available
-    document.getElementById('name').textContent = 'No bus stop selected';
-    document.getElementById('Longitude').textContent = 'Longitude: N/A';
-    document.getElementById('Latitude').textContent = 'Latitude: N/A';
 }
+
+function initializePage() {
+    displayStopName();  // Display stop name on page load
+    const busStopName = getStopNameFromLocalStorage();
+    fetchBusStopDetails(busStopName);  // Fetch bus stop details from Firestore
+}
+
+window.onload = initializePage;
+
 
 // Map initialization function to display the bus stop's location
 function initMap(lat, lng) {
