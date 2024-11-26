@@ -11,23 +11,40 @@ function getNameFromAuth() {
     });
 }
 
-// Function to load bus stops and check for favorites dynamically
-function loadBusStops() {
+// Load the two nearest bus stops OR two random bus stops if no location is entered
+function loadBusStops(userLat = null, userLng = null) {
+
+    
     db.collection("stops").get().then(querySnapshot => {
-        const busStops = [];
+        const busStops = []; // Array for bus stop data
         const userId = firebase.auth().currentUser?.uid;
 
+        // Add for each document in "stops"
         querySnapshot.forEach(doc => {
             const busStopData = doc.data();
-            const stopId = doc.id; // Document ID of the bus stop (generated ID)
-            busStops.push({ stopId, ...busStopData });
+            const stopId = doc.id; // Document ID of the bus stop
+            let distance = null; 
+
+            // Calculates distance only if the latitude and longitude are provided
+            if (userLat !== null && userLng !== null) {
+            distance = calculateDistance(userLat, userLng, busStopData.lat, busStopData.lng);
+            } 
+
+            // Pushes the bus stop data, distance, and any other attributes into the busStop array
+            busStops.push({ stopId, distance, ...busStopData });
         });
 
-        // Randomly select two bus stops
-        const randomBusStops = getRandomBusStops(busStops, 2);
+        let selectedBusStops;
 
-        // Display details for the first random bus stop
-        const stop1 = randomBusStops[0];
+        // Sort bus stops by distance and take the nearest two
+        if (userLat !== null && userLng !== null) {
+            selectedBusStops = busStops.sort((a, b) => a.distance - b.distance).slice(0, 2);
+        } else {
+            selectedBusStops = getRandomBusStops(busStops, 2);
+        }
+
+        // Display details for the first nearest bus stop
+        const stop1 = selectedBusStops[0];
         document.getElementById("stop1").textContent = stop1.name;
         document.getElementById("NB1").textContent = formatRouteNumber(stop1.id);
         document.getElementById("NB2").textContent = formatRouteNumber(stop1.lat);
@@ -35,8 +52,8 @@ function loadBusStops() {
         displayStars("stop1-stars", stop1.stars, stop1.stopId);
         displayAverageStars(stop1.stopId, "stop1-average");
 
-        // Display details for the second random bus stop
-        const stop2 = randomBusStops[1];
+        // Display details for the second nearest bus stop
+        const stop2 = selectedBusStops[1];
         document.getElementById("stop2").textContent = stop2.name;
         document.getElementById("south1").textContent = formatRouteNumber(stop2.id);
         document.getElementById("south2").textContent = formatRouteNumber(stop2.lat);
@@ -45,9 +62,8 @@ function loadBusStops() {
         displayAverageStars(stop2.stopId, "stop2-average");
 
         if (userId) {
-            // For each of the random bus stops, check if they are favorites
-            randomBusStops.forEach((stop, index) => {
-                // For stop1, call the function with the correct element ID
+            // For each of the nearest bus stops, check if they are favorites
+            selectedBusStops.forEach((stop, index) => {
                 checkFavoriteStatus(userId, stop.stopId, `stop${index + 1}-bookmark`);
             });
         }
@@ -55,6 +71,7 @@ function loadBusStops() {
         console.error("Error loading bus stops: ", error);
     });
 }
+
 
 // Function to check if a bus stop's document ID exists in the user's favorites
 function checkFavoriteStatus(userId, stopId, bookmarkElementId) {
@@ -112,7 +129,23 @@ function initializePage() {
             if (nameElement) {
                 nameElement.innerText = userName;
             }
-            loadBusStops();
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Pass user's location to loadBusStops
+                    loadBusStops(userLat, userLng);
+                },
+                error => {
+                    console.error("Error fetching location:", error);
+
+                    alert("Unable to access location. Showing default stops.");
+                    loadBusStops(); 
+                }
+            );
+            
         } else {
             console.log("No user is logged in");
         }
@@ -193,4 +226,17 @@ function displayAverageStars(busStopId, elementId) {
     .catch(error => {
         console.error("Error calculating average rating:", error);
     });
+}
+
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a =
+        0.5 - Math.cos(dLat) / 2 +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        (1 - Math.cos(dLng)) / 2;
+    const distance = R * 2 * Math.asin(Math.sqrt(a));  // Distance in km
+    console.log("Calculated distance:", distance, "km");
+    return distance;
 }
