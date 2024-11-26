@@ -62,9 +62,15 @@ function selectBusStops(busStops, userLat, userLng) {
 function displayStopDetails(selectedBusStops, stopNumber) {
     const stop = selectedBusStops[stopNumber - 1];
     document.getElementById(`stop${stopNumber}`).textContent = stop.name;
-    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}1`).textContent = formatRouteNumber(stop.id);
-    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}2`).textContent = formatRouteNumber(stop.lat);
-    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}3`).textContent = formatRouteNumber(stop.lng);
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}1`).textContent 
+        = formatRouteNumber(stop.id);
+        
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}2`).textContent 
+        = formatRouteNumber(stop.lat);
+
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}3`).textContent 
+        = formatRouteNumber(stop.lng);
+
     displayStars(`stop${stopNumber}-stars`, stop.stars, stop.stopId);
     displayAverageStars(stop.stopId, `stop${stopNumber}-average`);
 }
