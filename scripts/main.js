@@ -11,58 +11,17 @@ function getNameFromAuth() {
     });
 }
 
-// Load the two nearest bus stops OR two random bus stops if no location is entered
+// Loads the two nearest bus stops to the user (if location is provided)
 function loadBusStops(userLat = null, userLng = null) {
-
-    
     db.collection("stops").get().then(querySnapshot => {
-        const busStops = []; // Array for bus stop data
+        const busStops = gatherBusStops(querySnapshot, userLat, userLng);
+        const selectedBusStops = selectBusStops(busStops, userLat, userLng);
+
+        displayStopDetails(selectedBusStops, 1);
+        displayStopDetails(selectedBusStops, 2);
+
         const userId = firebase.auth().currentUser?.uid;
-
-        // Add for each document in "stops"
-        querySnapshot.forEach(doc => {
-            const busStopData = doc.data();
-            const stopId = doc.id; // Document ID of the bus stop
-            let distance = null; 
-
-            // Calculates distance only if the latitude and longitude are provided
-            if (userLat !== null && userLng !== null) {
-            distance = calculateDistance(userLat, userLng, busStopData.lat, busStopData.lng);
-            } 
-
-            // Pushes the bus stop data, distance, and any other attributes into the busStop array
-            busStops.push({ stopId, distance, ...busStopData });
-        });
-
-        let selectedBusStops;
-
-        // Sort bus stops by distance and take the nearest two
-        if (userLat !== null && userLng !== null) {
-            selectedBusStops = busStops.sort((a, b) => a.distance - b.distance).slice(0, 2);
-        } else {
-            selectedBusStops = getRandomBusStops(busStops, 2);
-        }
-
-        // Display details for the first nearest bus stop
-        const stop1 = selectedBusStops[0];
-        document.getElementById("stop1").textContent = stop1.name;
-        document.getElementById("NB1").textContent = formatRouteNumber(stop1.id);
-        document.getElementById("NB2").textContent = formatRouteNumber(stop1.lat);
-        document.getElementById("NB3").textContent = formatRouteNumber(stop1.lng);
-        displayStars("stop1-stars", stop1.stars, stop1.stopId);
-        displayAverageStars(stop1.stopId, "stop1-average");
-
-        // Display details for the second nearest bus stop
-        const stop2 = selectedBusStops[1];
-        document.getElementById("stop2").textContent = stop2.name;
-        document.getElementById("south1").textContent = formatRouteNumber(stop2.id);
-        document.getElementById("south2").textContent = formatRouteNumber(stop2.lat);
-        document.getElementById("south3").textContent = formatRouteNumber(stop2.lng);
-        displayStars("stop2-stars", stop2.stars, stop2.stopId);
-        displayAverageStars(stop2.stopId, "stop2-average");
-
         if (userId) {
-            // For each of the nearest bus stops, check if they are favorites
             selectedBusStops.forEach((stop, index) => {
                 checkFavoriteStatus(userId, stop.stopId, `stop${index + 1}-bookmark`);
             });
@@ -72,6 +31,43 @@ function loadBusStops(userLat = null, userLng = null) {
     });
 }
 
+// Grabs bus stop data from the database and then calculates the distance for each stop
+// to the user's location (if location is provided)
+function gatherBusStops(querySnapshot, userLat, userLng) {
+    const busStops = [];
+    querySnapshot.forEach(doc => {
+        const busStopData = doc.data();
+        const stopId = doc.id;
+        let distance = null;
+        
+        if (userLat !== null && userLng !== null) {
+            distance = calculateDistance(userLat, userLng, busStopData.lat, busStopData.lng);
+        }
+
+        busStops.push({ stopId, distance, ...busStopData });
+    });
+    return busStops;
+}
+
+// Selects and returns the two nearest bus stops to the user's provided location
+function selectBusStops(busStops, userLat, userLng) {
+    if (userLat !== null && userLng !== null) {
+        return busStops.sort((a, b) => a.distance - b.distance).slice(0, 2);
+    } else {
+        return getRandomBusStops(busStops, 2);
+    }
+}
+
+// Displays the details based on the two nearest bus stops to the user's provided location
+function displayStopDetails(selectedBusStops, stopNumber) {
+    const stop = selectedBusStops[stopNumber - 1];
+    document.getElementById(`stop${stopNumber}`).textContent = stop.name;
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}1`).textContent = formatRouteNumber(stop.id);
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}2`).textContent = formatRouteNumber(stop.lat);
+    document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}3`).textContent = formatRouteNumber(stop.lng);
+    displayStars(`stop${stopNumber}-stars`, stop.stars, stop.stopId);
+    displayAverageStars(stop.stopId, `stop${stopNumber}-average`);
+}
 
 // Function to check if a bus stop's document ID exists in the user's favorites
 function checkFavoriteStatus(userId, stopId, bookmarkElementId) {
