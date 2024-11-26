@@ -1,19 +1,19 @@
-var currentUser;               //points to the document of the user who is logged in
+var currentUser; // Points to the document of the user who is logged in
 
 function populateUserInfo() {
             firebase.auth().onAuthStateChanged(user => {
                 // Check if user is signed in:
                 if (user) {
-                    //go to the correct user document by referencing to the user uid
+                    // Go to the correct user document by referencing to the user uid
                     currentUser = db.collection("users").doc(user.uid)
-                    //get the document for current user.
+                    // Get the document for current user
                     currentUser.get()
                         .then(userDoc => {
-                            //get the data fields of the user
+                            // Get the data fields of the user
                             let userName = userDoc.data().name;
                             let userFavoriteBus = userDoc.data().favorite;
                             let userCity = userDoc.data().city;
-                            //if the data fields are not empty, then write them in to the form.
+                            // If the data fields are not empty, then write them in to the form
                             if (userName != null) {
                                 document.getElementById("nameInput").value = userName;
                             }
@@ -31,7 +31,7 @@ function populateUserInfo() {
             });
 }
 
-//call the function to run it 
+// Call the function to run it 
 populateUserInfo();
 
 function editUserInfo() {
@@ -40,28 +40,25 @@ function editUserInfo() {
     document.getElementById('personalInfoFields').disabled = false;
     const editButton = document.getElementById("editButton");
     const saveButton = document.getElementById("saveButton");
-    editButton.style.display = "none"; // Hides the button
-    saveButton.style.display = "inline-block";
+    editButton.style.display = "none"; // Hides the edit button
+    saveButton.style.display = "inline-block"; // Displays the save button
 
  }
 
  function saveUserInfo() {
 
-        // get user entered values
-        userName = document.getElementById('nameInput').value;       // get the value of the field with id="nameInput"
-        userFavoriteBus = document.getElementById('favoriteBusInput').value;     // get the value of the field with id="favoriteBusInput"
-        userCity = document.getElementById('cityInput').value;       // get the value of the field with id="cityInput"
+        // Get user entered values
+        userName = document.getElementById('nameInput').value; // Get the value of the field with id="nameInput"
+        userFavoriteBus = document.getElementById('favoriteBusInput').value; // Get the value of the field with id="favoriteBusInput"
+        userCity = document.getElementById('cityInput').value; // Get the value of the field with id="cityInput"
         const editButton = document.getElementById("editButton");
         const saveButton = document.getElementById("saveButton");
         const editSeparator = document.getElementById("editSeparator");
-        saveButton.style.display = "none"; 
-        editSeparator.style.display = "none";
-        editButton.style.display = "inline-block";
+        saveButton.style.display = "none"; // Hides the save button
+        editSeparator.style.display = "none"; // Hides the edit separator which would make the button look off
+        editButton.style.display = "inline-block"; // Displays the edit button
 
-
-
-
-        // update user's document in Firestore
+        // Update user's document in Firestore
         currentUser.update({
             name: userName,
             favorite: userFavoriteBus,
