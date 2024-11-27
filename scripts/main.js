@@ -70,10 +70,28 @@ function displayStopDetails(selectedBusStops, stopNumber) {
 
     document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}3`).textContent 
         = formatRouteNumber(stop.lng);
-        
-    displayStars(`stop${stopNumber}-stars`, stop.stars, stop.stopId);
+
+        const userId = firebase.auth().currentUser?.uid;
+        if (userId) {
+            loadUserRating(`stop${stopNumber}-stars`, userId, stop.stopId);
+        } else {
+            displayStars(`stop${stopNumber}-stars`, 0, stop.stopId); // Default to 0 stars if not logged in
+        }
     displayAverageStars(stop.stopId, `stop${stopNumber}-average`);
 }
+
+function loadUserRating(elementId, userId, busStopId) {
+    db.collection("stops").doc(busStopId).collection("ratings").doc(userId).get()
+    .then(doc => {
+        const userStars = doc.exists ? doc.data().stars : 0; // Default to 0 if no rating exists
+        displayStars(elementId, userStars, busStopId);
+    })
+    .catch(error => {
+        console.error("Error loading user rating:", error);
+        displayStars(elementId, 0, busStopId); // Show 0 stars in case of an error
+    });
+}
+
 
 // Function to check if a bus stop's document ID exists in the user's favorites
 function checkFavoriteStatus(userId, stopId, bookmarkElementId) {
@@ -172,7 +190,12 @@ function displayStars(elementId, currentStarCount, busStopId) {
     for (let i = 1; i <= 5; i++) {
         const star = document.createElement("i");
         star.classList.add("star", "fas", "fa-star", "clickable");
-        star.classList.add(i < currentStarCount ? "filled" : "unfilled");
+
+        if (i <= currentStarCount) {
+            star.classList.add("filled");
+        } else {
+            star.classList.add("unfilled");
+        }
         star.addEventListener("click", () => updateStarRating(i, busStopId, elementId));
         starContainer.appendChild(star);
     }
