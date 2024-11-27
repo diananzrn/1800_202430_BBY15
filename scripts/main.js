@@ -70,7 +70,7 @@ function displayStopDetails(selectedBusStops, stopNumber) {
 
     document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}3`).textContent 
         = formatRouteNumber(stop.lng);
-
+        
     displayStars(`stop${stopNumber}-stars`, stop.stars, stop.stopId);
     displayAverageStars(stop.stopId, `stop${stopNumber}-average`);
 }

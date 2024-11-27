@@ -56,7 +56,7 @@ function storeStopName(stopElement) {
 
 function displayStopName() {
     // Retrieve the bus stop name from localStorage
-    const busStopName = localStorage.getItem('stopName');
+    const stopName = localStorage.getItem('stopName');
     const stopSource = localStorage.getItem('stopSource');
 
     console.log("Retrieved from localStorage - Stop Name:", busStopName);
@@ -66,7 +66,7 @@ function displayStopName() {
         console.log("Valid stop name captured:", stopName);
 
         // Store the bus stop name and source in localStorage
-        localStorage.setItem('busStopName', stopName);
+        localStorage.setItem('stopName', stopName);
         localStorage.setItem('stopSource', source);
         console.log("Stored in localStorage - busStopName:", stopName);
         console.log("Stored in localStorage - stopSource:", source);
