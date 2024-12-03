@@ -222,7 +222,7 @@ function populateReviews() {
                 reviewCard.querySelector(".time").innerHTML = new Date(
                     time
                 ).toLocaleString();
-                reviewCard.querySelector(".level").innerHTML = `Crowd evel: ${level}`;
+                reviewCard.querySelector(".level").innerHTML = `Crowd Level: ${level}`;
                 reviewCard.querySelector(".waiting").innerHTML = `Waiting Period: ${waiting}`;
                 reviewCard.querySelector(".full").innerHTML = `Bus full: ${full}`;
                 reviewCard.querySelector(".traffic").innerHTML = `Traffic: ${traffic}`;

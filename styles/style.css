@@ -112,9 +112,16 @@ input[type="search"] {
 
 .review-card {
     margin: 2%;
-    background-color:#fffff8;
+    background-color:#00ba00;
     border: none;
     border-radius: 20px;
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
 }
 
+.card-body p {
+    margin-bottom: 0; /* Remove extra space below the text */
+}
+
+.material-icons.star {
+    margin-top: 0; /* Remove space above the stars */
+}

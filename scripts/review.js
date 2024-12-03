@@ -46,12 +46,11 @@ function writeReview() {
     var user = firebase.auth().currentUser;
     if (user) {
         var currentUser = db.collection("users").doc(user.uid);
-        var userID = currentUser;
         
         // Get the document for the current user.
         db.collection("reviews").add({
             stopName: stopName,
-            userID: userID,
+            userID: currentUser,
             userName: user.displayName,
             title: stopTitle,
             crowdLevel: crowdLevel,
