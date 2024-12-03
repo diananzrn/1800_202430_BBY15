@@ -199,52 +199,55 @@ function populateReviews() {
     db.collection("reviews")
         .where('stopName', '==', busStopName)
         .get()
-        .then((allReviews) => {
-            reviews = allReviews.docs;
-            console.log(reviews);
-            reviews.forEach((doc) => {
-                var title = doc.data().title;
-                var name = doc.data().userName;
-                var level = doc.data().crowdLevel;
-                var description = doc.data().description;
-                var traffic = doc.data().traffic;
-                var full = doc.data().full;
-                var waiting = doc.data().waiting;
-                var time = doc.data().timestamp.toDate();
-                var rating = doc.data().rating; // Get the rating value
-                console.log(rating)
-
-                console.log(time);
-
-                let reviewCard = hikeCardTemplate.content.cloneNode(true);
-                reviewCard.querySelector(".title").innerHTML = title;
-                reviewCard.querySelector(".user").innerHTML = name;
-                reviewCard.querySelector(".time").innerHTML = new Date(
-                    time
-                ).toLocaleString();
-                reviewCard.querySelector(".level").innerHTML = `Crowd Level: ${level}`;
-                reviewCard.querySelector(".waiting").innerHTML = `Waiting Period: ${waiting}`;
-                reviewCard.querySelector(".full").innerHTML = `Bus full: ${full}`;
-                reviewCard.querySelector(".traffic").innerHTML = `Traffic: ${traffic}`;
-                reviewCard.querySelector( ".description").innerHTML = `Description: ${description}`;
-
-                // Populate the star rating based on the rating value
-                
-	              // Initialize an empty string to store the star rating HTML
-								let starRating = "";
-								// This loop runs from i=0 to i<rating, where 'rating' is a variable holding the rating value.
-                for (let i = 0; i < rating; i++) {
-                    starRating += '<span class="material-icons"><i class="fas fa-star"></i></span>';
-                }
-								// After the first loop, this second loop runs from i=rating to i<5.
-                for (let i = rating; i < 5; i++) {
-                    starRating += '<span class="material-icons"><i class="far fa-star"></i></span>';
-                }
-                reviewCard.querySelector(".star-rating").innerHTML = starRating;
-
-                hikeCardGroup.appendChild(reviewCard);
-            });
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const stopDoc = querySnapshot.docs[0];
+                localStorage.setItem('stopName', stopDoc.data().name); // Store the specific stop name
+                localStorage.setItem('stopId', stopDoc.id);
+                window.location.href = 'review.html';
+            }
         });
 }
 
-populateReviews();
+// This code will be in stop.js, assuming Firestore and Firebase are already initialized.
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the stop name from localStorage (already set in the review page)
+    const stopName = localStorage.getItem('stopName');
+    
+    // Reference to the reviews collection in Firestore
+    const reviewsRef = db.collection("reviews").where("stopName", "==", stopName);
+
+    // Get the reviews from Firestore
+    reviewsRef.get().then((querySnapshot) => {
+        const reviewCardGroup = document.getElementById("reviewCardGroup");
+        
+        // Check if reviews exist
+        if (querySnapshot.empty) {
+            reviewCardGroup.innerHTML = "<p>No reviews yet.</p>";
+        } else {
+            querySnapshot.forEach((doc) => {
+                const reviewData = doc.data();
+
+                // Clone the review card template
+                const reviewCardTemplate = document.getElementById("reviewCardTemplate").content.cloneNode(true);
+                
+                // Fill the template with data
+                reviewCardTemplate.querySelector(".title").textContent = reviewData.title;
+                reviewCardTemplate.querySelector(".user").textContent = reviewData.userName;
+                reviewCardTemplate.querySelector(".star-rating").textContent = `Rating: ${reviewData.rating} stars`;
+                reviewCardTemplate.querySelector(".time").textContent = new Date(reviewData.timestamp.seconds * 1000).toLocaleString(); // Format timestamp
+                reviewCardTemplate.querySelector(".waiting").textContent = `Waiting: ${reviewData.waiting}`;
+                reviewCardTemplate.querySelector(".level").textContent = `Crowd Level: ${reviewData.crowdLevel}`;
+                reviewCardTemplate.querySelector(".full").textContent = `Bus Full: ${reviewData.full}`;
+                reviewCardTemplate.querySelector(".traffic").textContent = `Traffic: ${reviewData.traffic}`;
+                reviewCardTemplate.querySelector(".description").textContent = reviewData.description;
+
+                // Append the filled card to the reviewCardGroup container
+                reviewCardGroup.appendChild(reviewCardTemplate);
+            });
+        }
+    }).catch((error) => {
+        console.error("Error fetching reviews: ", error);
+    });
+});

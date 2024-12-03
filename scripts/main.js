@@ -61,7 +61,18 @@ function selectBusStops(busStops, userLat, userLng) {
 // Displays the details based on the two nearest bus stops to the user's provided location
 function displayStopDetails(selectedBusStops, stopNumber) {
     const stop = selectedBusStops[stopNumber - 1];
-    document.getElementById(`stop${stopNumber}`).textContent = stop.name;
+    const stopElement = document.getElementById(`stop${stopNumber}`);
+    stopElement.textContent = stop.name;
+    
+    // Store the full stop data as a data attribute
+    stopElement.setAttribute('data-stop-info', JSON.stringify(stop));
+    
+    // Update the click handler to store complete stop info
+    stopElement.onclick = function() {
+        localStorage.setItem('busStopName', stop.name);
+        localStorage.setItem('stopData', JSON.stringify(stop));
+    };
+    
     document.getElementById(`${stopNumber === 1 ? 'NB' : 'south'}1`).textContent 
         = formatRouteNumber(stop.id);
         
@@ -79,7 +90,6 @@ function displayStopDetails(selectedBusStops, stopNumber) {
         }
     displayAverageStars(stop.stopId, `stop${stopNumber}-average`);
 }
-
 function loadUserRating(elementId, userId, busStopId) {
     db.collection("stops").doc(busStopId).collection("ratings").doc(userId).get()
     .then(doc => {
@@ -265,3 +275,6 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     console.log("Calculated distance:", distance, "km");
     return distance;
 }
+
+
+

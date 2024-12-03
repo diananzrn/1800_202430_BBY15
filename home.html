@@ -81,7 +81,7 @@
                         <div class="average-stars">
                             Average Rating: <span id="stop2-average">0</span> / 5
                         </div>
-                        <i class="far fa-bookmark" data-stop-id="stop1" style="float: right; scale: 2.5; margin-right:5%;"></i>
+                        <i class="far fa-bookmark" data-stop-id="stop2" style="float: right; scale: 2.5; margin-right:5%;"></i>
                         <a class="btn" style="margin-top: 3%; border-radius: 2rem;">Go to stop</a>
                     </div>
                 </div>
@@ -132,25 +132,24 @@
             document.querySelectorAll('.fa-bookmark').forEach(bookmark => {
                 const stopId = bookmark.getAttribute('data-stop-id');
                 
-                // Check if the stop is already in the user's Firestore favorites
+                // Set default state to unfavorited first
+                bookmark.classList.remove('fas');
+                bookmark.classList.add('far');
+                
+                // Check Firestore favorites
                 const stopRef = db.collection('users').doc(userId).collection('favorites').doc(stopId);
                 
                 stopRef.get().then(doc => {
-                    if (doc.exists) {
-                        // Mark it as filled if it exists
+                    if (doc.exists && doc.data()) {
                         bookmark.classList.add('fas');
                         bookmark.classList.remove('far');
-                    } else {
-                        // Mark it as empty if it doesn't exist
-                        bookmark.classList.remove('fas');
-                        bookmark.classList.add('far');
                     }
                 });
 
-                // Add event listener for bookmark clicks
+                // Rest of your click handler code stays the same
                 bookmark.onclick = function() {
-                    const isFavorite = bookmark.classList.toggle('fas'); // Toggle between filled and outlined
-                    bookmark.classList.toggle('far'); // Toggle between outlined and filled
+                    const isFavorite = bookmark.classList.toggle('fas');
+                    bookmark.classList.toggle('far');
                     
                     const titleElement = document.querySelector(`#${stopId}`);
                     const title = titleElement ? titleElement.textContent : '';
@@ -163,7 +162,6 @@
                 };
             });
         }
-
         function addToFavorites(userId, stopId, title) {
             const stopRef = db.collection('users').doc(userId).collection('favorites').doc(stopId);
             stopRef.set({
