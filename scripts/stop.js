@@ -120,6 +120,7 @@ function saveStopDocumentIDAndRedirect() {
                 window.location.href = 'review.html';
             }
         });
+
 }
 
 // This code will be in stop.js, assuming Firestore and Firebase are already initialized.
@@ -148,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Fill the template with data
                 reviewCardTemplate.querySelector(".title").textContent = reviewData.title;
                 reviewCardTemplate.querySelector(".user").textContent = reviewData.userName;
+                reviewCardTemplate.querySelector(".stop-name-value").textContent = reviewData.stopName;
                 reviewCardTemplate.querySelector(".star-rating").textContent = `Rating: ${reviewData.rating} stars`;
                 reviewCardTemplate.querySelector(".time").textContent = new Date(reviewData.timestamp.seconds * 1000).toLocaleString(); // Format timestamp
                 reviewCardTemplate.querySelector(".waiting").textContent = `Waiting: ${reviewData.waiting}`;
