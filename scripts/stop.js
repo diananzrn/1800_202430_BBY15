@@ -1,250 +1,166 @@
-function storeStopName(stopElement, source) {
-    const stopName = stopElement.textContent.trim();
-    console.log("Clicked element text:", stopElement.textContent);
-    console.log("Source passed to storeStopName:", source);
-
-    if (stopName) {
-        console.log("Valid stop name captured:", stopName);
-
-        // Store the bus stop name and source in localStorage
-        localStorage.setItem('busStopName', stopName);
-        localStorage.setItem('stopSource', source);
-        console.log("Stored in localStorage - busStopName:", stopName);
-        console.log("Stored in localStorage - stopSource:", source);
-
-        // Update the search input field with the selected stop name
-        const searchInput = document.getElementById('suggestions');
-        searchInput.value = stopName;
-
-        setTimeout(function () {
-            console.log("Redirecting to stop.html...");
-            window.location.href = 'stop.html';
-        }, 100);
-    } else {
-        console.error("Invalid stop name captured.");
-    }
-}
-
-function storeStopFromSearch() {
-    const searchInput = document.getElementById('suggestions');
-    const stopName = searchInput.value.trim();
-    
-    if (stopName) {
-        console.log("Stop name from search input:", stopName);
-
-        // Store the bus stop name from search in localStorage
-        localStorage.setItem('busStopName', stopName);
-        localStorage.setItem('stopSource', 'search');
-        console.log("Stored in localStorage - busStopName:", stopName);
-        console.log("Stored in localStorage - stopSource: search");
-// Function to store the stop name dynamically
+// Store the selected bus stop name and redirect
 function storeStopName(stopElement) {
-    // Extract the bus stop name from the clicked element
-    const stopName = stopElement.textContent || stopElement.innerText;
-
-    // Store the stop name in localStorage
-    localStorage.setItem('stopName', stopName);
-}
-        setTimeout(function () {
-            console.log("Redirecting to stop.html...");
-            window.location.href = 'stop.html';
-        }, 100);
-    } else {
-        console.error("Invalid stop name captured from search.");
-    }
-}
-
-function displayStopName() {
-    // Retrieve the bus stop name from localStorage
-    const stopName = localStorage.getItem('stopName');
-    const stopSource = localStorage.getItem('stopSource');
-
-    console.log("Retrieved from localStorage - Stop Name:", busStopName);
-    console.log("Source retrieved from localStorage:", stopSource);
-
+    const stopName = stopElement.textContent.trim();
     if (stopName) {
-        console.log("Valid stop name captured:", stopName);
-
-        // Store the bus stop name and source in localStorage
-        localStorage.setItem('stopName', stopName);
-        localStorage.setItem('stopSource', source);
-        console.log("Stored in localStorage - busStopName:", stopName);
-        console.log("Stored in localStorage - stopSource:", source);
-
-        // Update the search input field with the selected stop name
-        const searchInput = document.getElementById('suggestions');
-        searchInput.value = stopName;
-
-        setTimeout(function () {
-            console.log("Redirecting to stop.html...");
-            window.location.href = 'stop.html';
-        }, 100);
+        console.log("Storing selected stop:", stopName);
+        localStorage.setItem('busStopName', stopName);
+        setTimeout(() => window.location.href = 'stop.html', 100);
     } else {
-        document.getElementById('name').textContent = "No bus stop selected";
+        console.error("No stop name found to store.");
     }
 }
 
-// Run displayStopName when the stop.html page loads to show the stored stop name
-window.onload = displayStopName;
+// Display the stored bus stop name and fetch its details
+function displayStopName() {
+    const busStopName = localStorage.getItem('busStopName');
 
-// Get the bus stop name from localStorage
-const busStopName = localStorage.getItem('busStopName');
+    if (busStopName) {
+        console.log("Displaying stored stop name:", busStopName);
+        document.getElementById('name').textContent = busStopName;
 
-if (busStopName) {
-    // Query Firestore for the bus stop details using the bus stop name
-    db.collection('stops') // Firestore query
-        .where('name', '==', busStopName) 
-        .get()
-        .then((querySnapshot) => {
-            if (querySnapshot.empty) {
-                // Handle case where no bus stop is found
-                console.log("Bus stop not found.");
-                document.getElementById('name').textContent = 'Bus stop not found';
-                document.getElementById('Longitude').textContent = 'Longitude: N/A';
-                document.getElementById('Latitude').textContent = 'Latitude: N/A';
-            } else {
-                querySnapshot.forEach((doc) => {
-                    // Get the bus stop data from Firestore
-                    const busStopData = doc.data();
-                    const lat = busStopData.lat;
-                    const lng = busStopData.lng;
-                    console.log("Bus stop data:", busStopData);
+        // Query Firestore for stop details
+        db.collection('stops')
+            .where('name', '==', busStopName)
+            .get()
+            .then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    console.error("No matching bus stop found in Firestore.");
+                    displayStopNotFound();
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        // Display Longitude and Latitude
+                        document.getElementById('Longitude').textContent = `Longitude: ${data.lng || 'N/A'}`;
+                        document.getElementById('Latitude').textContent = `Latitude: ${data.lat || 'N/A'}`;
+                        
+                        // Initialize the map and get user location
+                        initMap(data.lat, data.lng);
+                        getUserLocation(data.lat, data.lng);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching stop data:", error);
+                displayStopNotFound();
+            });
+    } else {
+        console.error("No stop name found in localStorage.");
+        displayStopNotFound();
+    }
+}
 
-                    // Set the bus stop details in the HTML
-                    document.getElementById('name').textContent = busStopName;
-                    document.getElementById('Longitude').textContent = `Longitude: ${lng}`;
-                    document.getElementById('Latitude').textContent = `Latitude: ${lat}`;
-
-                    // Initialize the map with the bus stop location
-                    initMap(lat, lng);
-
-                    // Call getUserLocation to calculate and display distance
-                    getUserLocation(lat, lng);
-                });
-            }
-        })
-        .catch((error) => {
-            console.error('Error getting documents: ', error);
-        });
-} else {
-    // Handle case if bus stop name is not available
-    console.log("No bus stop name found in localStorage.");
+// Fallback display for missing stop data
+function displayStopNotFound() {
     document.getElementById('name').textContent = 'No bus stop selected';
     document.getElementById('Longitude').textContent = 'Longitude: N/A';
     document.getElementById('Latitude').textContent = 'Latitude: N/A';
 }
 
-// Map initialization function to display the bus stop's location
+// Initialize the map with the bus stop coordinates
 function initMap(lat, lng) {
-    console.log("Initializing map with coordinates:", lat, lng);
-    const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
-        center: { lat: parseFloat(lat), lng: parseFloat(lng) }
-    });
-
-    new google.maps.Marker({
-        position: { lat: parseFloat(lat), lng: parseFloat(lng) },
-        map: map,
-        title: 'Bus Stop Location'
-    });
+    if (lat && lng) {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: { lat: parseFloat(lat), lng: parseFloat(lng) },
+        });
+        new google.maps.Marker({
+            position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+            map: map,
+            title: 'Bus Stop Location',
+        });
+    } else {
+        console.error("Invalid coordinates for map initialization.");
+    }
 }
 
-// Function to calculate distance between two coordinates (lat, lng)
-function calculateDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a =
-        0.5 - Math.cos(dLat) / 2 +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        (1 - Math.cos(dLng)) / 2;
-    const distance = R * 2 * Math.asin(Math.sqrt(a));  // Distance in km
-    console.log("Calculated distance:", distance, "km");
-    return distance;
-}
-
-// Function to get the user's current location and calculate distance
+// Get the user's location and calculate the distance to the bus stop
 function getUserLocation(busStopLat, busStopLng) {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
-            console.log("User Location: ", userLat, userLng);
-            const distance = calculateDistance(userLat, userLng, busStopLat, busStopLng);
-            document.getElementById('distanceValue').textContent = `${distance.toFixed(2)} km`;
-        }, function (error) {
-            console.error("Error getting user location: ", error);
-            document.getElementById('distanceValue').textContent = 'Unable to retrieve your location.';
-        });
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                const distance = calculateDistance(userLat, userLng, busStopLat, busStopLng);
+                document.getElementById('distanceValue').textContent = `${distance.toFixed(2)} km`;
+            },
+            (error) => {
+                console.error("Geolocation error:", error);
+                document.getElementById('distanceValue').textContent = 'Unable to retrieve your location.';
+            }
+        );
     } else {
         document.getElementById('distanceValue').textContent = "Geolocation is not supported by this browser.";
     }
 }
 
-
-function saveStopDocumentIDAndRedirect(){
-    window.location.href = 'review.html';
+// Calculate the distance between two geographic coordinates
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.asin(Math.sqrt(a));
 }
 
-// displays reviews
-function populateReviews() {
-    let hikeCardTemplate = document.getElementById("reviewCardTemplate");
-    let hikeCardGroup = document.getElementById("reviewCardGroup");
+// Run displayStopName when the page loads
+window.onload = displayStopName;
 
+function saveStopDocumentIDAndRedirect() {
+    const busStopName = localStorage.getItem('busStopName');
     
-    const busStopName = localStorage.getItem('stopName');
-
-
-    
-    db.collection("reviews")
-        .where('stopName', '==', busStopName)
+    // Query Firestore to get the stop document ID
+    db.collection('stops')
+        .where('name', '==', busStopName)
         .get()
-        .then((allReviews) => {
-            reviews = allReviews.docs;
-            console.log(reviews);
-            reviews.forEach((doc) => {
-                var title = doc.data().title;
-                var name = doc.data().userName;
-                var level = doc.data().crowdLevel;
-                var description = doc.data().description;
-                var traffic = doc.data().traffic;
-                var full = doc.data().full;
-                var waiting = doc.data().waiting;
-                var time = doc.data().timestamp.toDate();
-                var rating = doc.data().rating; // Get the rating value
-                console.log(rating)
-
-                console.log(time);
-
-                let reviewCard = hikeCardTemplate.content.cloneNode(true);
-                reviewCard.querySelector(".title").innerHTML = title;
-                reviewCard.querySelector(".user").innerHTML = name;
-                reviewCard.querySelector(".time").innerHTML = new Date(
-                    time
-                ).toLocaleString();
-                reviewCard.querySelector(".level").innerHTML = `Crowd evel: ${level}`;
-                reviewCard.querySelector(".waiting").innerHTML = `Waiting Period: ${waiting}`;
-                reviewCard.querySelector(".full").innerHTML = `Bus full: ${full}`;
-                reviewCard.querySelector(".traffic").innerHTML = `Traffic: ${traffic}`;
-                reviewCard.querySelector( ".description").innerHTML = `Description: ${description}`;
-
-                // Populate the star rating based on the rating value
-                
-	              // Initialize an empty string to store the star rating HTML
-								let starRating = "";
-								// This loop runs from i=0 to i<rating, where 'rating' is a variable holding the rating value.
-                for (let i = 0; i < rating; i++) {
-                    starRating += '<span class="material-icons"><i class="fas fa-star"></i></span>';
-                }
-								// After the first loop, this second loop runs from i=rating to i<5.
-                for (let i = rating; i < 5; i++) {
-                    starRating += '<span class="material-icons"><i class="far fa-star"></i></span>';
-                }
-                reviewCard.querySelector(".star-rating").innerHTML = starRating;
-
-                hikeCardGroup.appendChild(reviewCard);
-            });
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const stopDoc = querySnapshot.docs[0];
+                localStorage.setItem('stopName', stopDoc.data().name); // Store the specific stop name
+                localStorage.setItem('stopId', stopDoc.id);
+                window.location.href = 'review.html';
+            }
         });
 }
 
-populateReviews();
+// This code will be in stop.js, assuming Firestore and Firebase are already initialized.
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the stop name from localStorage (already set in the review page)
+    const stopName = localStorage.getItem('stopName');
+    
+    // Reference to the reviews collection in Firestore
+    const reviewsRef = db.collection("reviews").where("stopName", "==", stopName);
+
+    // Get the reviews from Firestore
+    reviewsRef.get().then((querySnapshot) => {
+        const reviewCardGroup = document.getElementById("reviewCardGroup");
+        
+        // Check if reviews exist
+        if (querySnapshot.empty) {
+            reviewCardGroup.innerHTML = "<p>No reviews yet.</p>";
+        } else {
+            querySnapshot.forEach((doc) => {
+                const reviewData = doc.data();
+
+                // Clone the review card template
+                const reviewCardTemplate = document.getElementById("reviewCardTemplate").content.cloneNode(true);
+                
+                // Fill the template with data
+                reviewCardTemplate.querySelector(".title").textContent = reviewData.title;
+                reviewCardTemplate.querySelector(".user").textContent = reviewData.userName;
+                reviewCardTemplate.querySelector(".star-rating").textContent = `Rating: ${reviewData.rating} stars`;
+                reviewCardTemplate.querySelector(".time").textContent = new Date(reviewData.timestamp.seconds * 1000).toLocaleString(); // Format timestamp
+                reviewCardTemplate.querySelector(".waiting").textContent = `Waiting: ${reviewData.waiting}`;
+                reviewCardTemplate.querySelector(".level").textContent = `Crowd Level: ${reviewData.crowdLevel}`;
+                reviewCardTemplate.querySelector(".full").textContent = `Bus Full: ${reviewData.full}`;
+                reviewCardTemplate.querySelector(".traffic").textContent = `Traffic: ${reviewData.traffic}`;
+                reviewCardTemplate.querySelector(".description").textContent = reviewData.description;
+
+                // Append the filled card to the reviewCardGroup container
+                reviewCardGroup.appendChild(reviewCardTemplate);
+            });
+        }
+    }).catch((error) => {
+        console.error("Error fetching reviews: ", error);
+    });
+});
