@@ -116,6 +116,8 @@ input[type="search"] {
     border: none;
     border-radius: 20px;
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+    padding: 10px; /* Added padding to reduce size */
+    max-width: 300px; /* Set a maximum width to make it smaller */
 }
 
 .card-body p {
