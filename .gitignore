@@ -9,3 +9,4 @@ firestore.indexes.json
 firestore.rules
 404.html
 .firebase/
+firebase-debug.log
