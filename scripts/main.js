@@ -1,4 +1,4 @@
-// Get user name from Firebase Auth and display it
+// Get username from Firebase Auth and display it
 function getNameFromAuth() {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
